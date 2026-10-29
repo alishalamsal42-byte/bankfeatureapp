@@ -19,7 +19,7 @@ import { appCatalog } from './connection-catalog';
 import paneraAsset from '@/assets/brands/panera.svg.asset.json';
 import targetAsset from '@/assets/brands/target.svg.asset.json';
 import dunkinAsset from '@/assets/brands/dunkin.svg.asset.json';
-import wingstopAsset from '@/assets/brands/wingstop.png.asset.json';
+import wingstopAsset from '@/assets/brands/wingstop.svg.asset.json';
 import ultaAsset from '@/assets/brands/ulta.svg.asset.json';
 import sephoraAsset from '@/assets/brands/sephora.svg.asset.json';
 
