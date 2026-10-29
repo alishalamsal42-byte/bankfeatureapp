@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import type { Context as ReactContext } from 'react';
 import { pickBestNow, pickTop, rankRewards, unscoredRewards, type MapPoint, type ModelCategory } from '@/lib/model';
 import { mockPlaces } from '@/lib/model-fixtures';
-import { offers, demoOffers, partners, isLocked, type Offer } from '@/lib/rewards';
+import { offers, demoOffers, partners, isLocked, examplePartnerIds, type Offer } from '@/lib/rewards';
 import { appCatalog, updateConnections } from '@/lib/connection-catalog';
 import { BANNER_DURATION_MS, canNotify, gpsDistanceMiles, localDay, recordNotification, type DailyNotifications, type RankedOffer } from '@/lib/notifications';
 import { useRecommendationSession } from './recommendation-session';
@@ -39,8 +39,8 @@ function useStateEngine() {
   const [locationStatus, setLocationStatus] = useState('');
   const [ledger, setLedger] = useState<DailyNotifications | null>(null);
   const [banner, setBanner] = useState<(Offer & { scores?: RankedOffer['scores']; expiryAlert?: boolean }) | null>(null);
-  const [connectedIds, setConnectedIds] = useState(() => offers.filter(o => partners.some(p => p === o.merchant)).map(o => o.id));
-  const originalIds = useMemo(() => offers.filter(o => partners.some(p => p === o.merchant)).map(o => o.id), []);
+  const [connectedIds, setConnectedIds] = useState(() => [...offers.filter(o => partners.some(p => p === o.merchant)).map(o => o.id), ...examplePartnerIds]);
+  const originalIds = useMemo(() => [...offers.filter(o => partners.some(p => p === o.merchant)).map(o => o.id), ...examplePartnerIds], []);
   const [redeemedIds, setRedeemedIds] = useState<string[]>([]);
   const [redemptions, setRedemptions] = useState<Redemption[]>([]);
   /** In-app redemptions appended to Sarah's history (browser-local). */
@@ -52,7 +52,7 @@ function useStateEngine() {
     setControls(c => c ? { ...c, hoursSinceLast: { ...c.hoursSinceLast, [category]: 0 } } : c);
     setNow(new Date(t));
   };
-  useEffect(() => { const d = new Date(); setRedemptions(list => list.some(r => r.id.startsWith('seed-')) ? list : [...list, ...seedFromHistory(purchasesAsOf(d), offers, d.getTime())]); }, []);
+  useEffect(() => { const d = new Date(); setRedemptions(list => list.some(r => r.id.startsWith('seed-')) ? list : [...list, ...seedFromHistory(purchasesAsOf(d), [...offers, ...appCatalog], d.getTime())]); }, []);
   const [bankConnected, setBankConnected] = useState(true);
   const [bankPoints, setBankPoints] = useState<number>(BANK.startingPoints);
   const bank = useMemo(() => ({ connected: bankConnected, points: bankConnected ? bankPoints : 0, dollars: bankConnected ? bankDollars(bankPoints) : 0,

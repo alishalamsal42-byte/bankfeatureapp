@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { BrandLogo } from './BrandLogo';
 import { appCatalog, CONNECT_DELAY_MS } from '@/lib/connection-catalog';
-import type { Offer } from '@/lib/rewards';
+import { expiryLabel, type Offer } from '@/lib/rewards';
 import { useRewardEngine } from '@/hooks/recommendation-demo';
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router';
@@ -78,7 +78,7 @@ function MerchantDetails({ offer, onClose, onDisconnect }: { offer: Offer; onClo
     <dl className="mt-5 divide-y text-sm">
       <div className="flex justify-between py-3"><dt>Reward</dt><dd>{offer.title}</dd></div>
       {offer.minSpend > 0 && <div className="flex justify-between py-3"><dt>Minimum purchase</dt><dd>${offer.minSpend}</dd></div>}
-      <div className="flex justify-between py-3"><dt>Expires</dt><dd className={soon ? 'font-semibold text-warning' : ''}>{soon ? (days === 0 ? 'Expires today' : days === 1 ? 'Expires tomorrow' : `Expires in ${days} days`) : offer.expires}</dd></div>
+      <div className="flex justify-between py-3"><dt>{offer.renews ? 'Renews' : 'Expires'}</dt><dd className={soon ? 'font-semibold text-warning' : ''}>{soon ? expiryLabel({ renews: !!offer.renews, expiresInDays: days ?? 0 }) : offer.expires}</dd></div>
     </dl>
     {action === 'handoff' ? <>
       <Button className="mt-5 h-12 w-full rounded-full" onClick={() => setHandoff(true)}>Order on {offer.merchant} →</Button>

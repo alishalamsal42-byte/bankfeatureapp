@@ -21,3 +21,4 @@
 - [x] Bank app: Accounts home (checking, savings, rewards credit card with Bank points, lock card, quick actions, recent transactions from Sarah history), Pay & transfer and Plan & track pages; AI picks and instant redemption live under Benefits & offers.
 - [x] Replace Bank cash-out options with AI-picked offer spending, restore Home reward totals, and verify payments and retained history.
 - [x] Remove the Low/Medium match badge from the Accounts AI pick and verify its appearance.
+- [x] Add Publix, Target, Walmart (grocery) and Netflix, Spotify (online) example partners with logos, demo map points, renew labels and history names.
