@@ -46,6 +46,7 @@ function BankRewards() {
         {offers.map(offer => {
           const total = typicalPurchase(offer);
           const split = paymentSplit(total, offer.value, bank.points, true);
+          const charged = split.charged === 0 ? "$0" : `$${split.charged.toFixed(2)}`;
           return (
             <article key={offer.id} aria-label={`${offer.merchant} offer`} className="py-4">
               {offer.id === bestNow?.id && <p className="mb-2 text-xs font-bold text-success">{topPick ? "AI top pick" : "Good option right now"}</p>}
