@@ -52,7 +52,8 @@ function Pay() {
         </div>
         <label htmlFor="send-amount" className="mt-3 block text-sm font-semibold">Amount</label>
         <div className="mt-1 flex items-center gap-2"><span className="font-bold">$</span><Input id="send-amount" type="number" min={1} step="1" value={amount} onChange={e => setAmount(Number(e.target.value))} /></div>
-        <Button className="mt-3 h-11 w-full rounded-full" disabled={!(amount > 0)} onClick={() => toast(`Demo: $${amount.toFixed(2)} sent to ${to}.`)}>Send ${Number.isFinite(amount) ? amount.toFixed(2) : "0.00"} to {to}</Button>
+        {amount > accounts.checking.balance && <p className="mt-2 text-xs text-destructive">More than your ${accounts.checking.balance.toFixed(2)} checking balance.</p>}
+        <Button className="mt-3 h-11 w-full rounded-full" disabled={!(amount > 0) || amount > accounts.checking.balance} onClick={() => toast(`Demo: $${amount.toFixed(2)} sent to ${to}.`)}>Send ${Number.isFinite(amount) ? amount.toFixed(2) : "0.00"} to {to}</Button>
       </section>
 
       <h2 className="mt-6 mb-2 flex items-center gap-2 text-sm font-bold"><Receipt className="h-4 w-4" />Pay bills</h2>
@@ -67,7 +68,8 @@ function Pay() {
       <section className="rounded-3xl border bg-card p-4">
         <p className="text-sm text-muted-foreground">From {accounts.checking.name} (…{accounts.checking.last4}) to {accounts.savings.name} (…{accounts.savings.last4})</p>
         <div className="mt-2 flex items-center gap-2"><span className="font-bold">$</span><Input aria-label="Transfer amount" type="number" min={1} step="1" value={transfer} onChange={e => setTransfer(Number(e.target.value))} /></div>
-        <Button variant="outline" className="mt-3 h-11 w-full rounded-full" disabled={!(transfer > 0)} onClick={() => toast(`Demo: $${transfer.toFixed(2)} moved to savings.`)}>Transfer</Button>
+        {transfer > accounts.checking.balance && <p className="mt-2 text-xs text-destructive">More than your ${accounts.checking.balance.toFixed(2)} checking balance.</p>}
+        <Button variant="outline" className="mt-3 h-11 w-full rounded-full" disabled={!(transfer > 0) || transfer > accounts.checking.balance} onClick={() => toast(`Demo: $${transfer.toFixed(2)} moved to savings.`)}>Transfer</Button>
       </section>
 
       <button type="button" onClick={() => toast("Demo: point your camera at a check to deposit it.")} className="mt-6 mb-4 flex w-full items-center gap-4 rounded-3xl border bg-card p-4 text-left">
