@@ -1,0 +1,20 @@
+- [x] Implement pure scoring engine with uploaded weights and rule tests.
+- [x] Integrate ranked recommendations, notification threshold, and percentage bars.
+- [x] Replace offer emojis with logos and add Uber/Lyft travel offers.
+- [x] Verify tests and recommendation/redemption UI.
+- [x] Update uploaded coefficients and usual-hour inputs; verify all three visit-rate examples.
+- [x] Add the supplied mock rewards and places with straight-line map-distance ranking tests.
+- [x] Add For You top pick, contextual score bars and compact ranked rewards.
+- [x] Implement session-only category skip adjustment and verify reranking and navigation.
+- [x] Align Campus Brew values across recommendations and payment flow.
+- [x] Add shared demo controls, daily notification eligibility and timed banner.
+- [x] Check granted browser location every minute and verify notification flows and tests.
+- [x] Restrict scores, top picks and notifications to trained categories; show others as value-sorted compact rows.
+- [x] Align Starbucks coffee data and verify Morning coffee top pick and payment values.
+- [x] Add searchable app catalog, consent, demo sign-in and timed connection sheet.
+- [x] Share connected rewards with For You and redemption; support disconnect and animated totals.
+- [x] Verify connection and disconnection flows and rule tests.
+- [x] Retrain with spend velocity: new weights and usual hours, 234-purchase history, spending pace label and demo slider, assistant context; update tests to new values.
+- [x] Late-night food preset with Taco Bell on the demo map; demo lunch deal limited to 11 AM–3 PM; Quiet night follows dinner; green money values and neutral score bars; expiry alerts no longer train the model; stale suggestion banners clear when the moment changes.
+- [x] Rides (Uber, Lyft) scored by a new trained ride model: Heading home preset, afternoon picks 1–5 PM; Home and For You always show a pick ("Good option right now" when nothing is strong, never a notification); Amazon is the demo online reward; reason text for online, rides and very short distances.
+- [x] Reframed as the Rewards section of an unnamed bank app: blue bank header with account tile and Accounts / Pay & transfer / Rewards tabs; bank points are "Bank points"; new Points page (pay at checkout, instant cash back, gift cards); Points tab replaces Redeem in the bottom bar.
