@@ -120,7 +120,7 @@ function HomeScreen() {
         <section className="mt-2 divide-y rounded-3xl border bg-card px-4">
           {expiring.map(o => <Link key={o.id} to="/redeem" search={o.bankFunded ? { id: o.id, useBank: true } : { id: o.id }} className="flex items-center gap-3 py-3">
             <BrandLogo name={o.merchant} />
-            <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{o.title}</p><p className="text-xs text-muted-foreground">{o.merchant}{o.bankFunded ? " · Card offer" : ""} · {expiryLabel(o)}</p></div>
+            <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{o.title}</p><p className="text-xs text-muted-foreground">{o.merchant} · {expiryLabel(o)}</p></div>
             <span className="text-sm font-bold">${o.value.toFixed(2)}</span>
           </Link>)}
         </section>

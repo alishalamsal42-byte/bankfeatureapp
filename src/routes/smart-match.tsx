@@ -88,8 +88,8 @@ function SmartMatch() {
             <Button variant="ghost" aria-label={`${p} connected app`} onClick={() => { if (editing) { setConfirm(offer); return; } setSelected(offer); setOpen(true); }} className="w-full shadow-soft flex h-auto min-h-40 flex-col items-center gap-0 rounded-3xl bg-card p-3 text-center whitespace-normal">
               <BrandIcon name={p} />
               <p className="mt-2 w-full truncate text-xs font-bold">{p}</p>
-              <p className="mt-1 text-xs font-bold text-success">{offer && offer.points > 0 ? `${offer.points.toLocaleString()} pts` : "Card offer"}</p>
-              <p className="text-xs text-muted-foreground">{offer ? `≈ $${offer.value.toFixed(2)}` : ""}</p>
+              <p className="mt-1 text-xs font-bold text-success">{offer && offer.points > 0 ? `${offer.points.toLocaleString()} pts` : `$${offer.value.toFixed(2)} off`}</p>
+              <p className="text-xs text-muted-foreground">{offer.points > 0 ? `≈ $${offer.value.toFixed(2)}` : ""}</p>
               <span className="mt-2 text-[10px] font-bold text-success">Connected</span>
             </Button>
             </div>

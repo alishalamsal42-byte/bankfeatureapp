@@ -14,7 +14,7 @@ type Seed = [daysAgo: number, merchant: string, title: string, cat: SavingsCateg
 const SEEDS: Seed[] = [
   [1, "Starbucks", "Free drink", "Coffee", 5.25, 750, 0, 1, 0.31],
   [3, "Chick-fil-A", "Free sandwich", "Food", 6.5, 1200, 330, 9, 0.36],
-  [6, "Amazon", "$10 voucher", "Shopping", 10, 1000, 0, 1, 0.22],
+  [6, "Amazon", "$10 off your order", "Shopping", 0, 0, 1000, 1, 0.22],
   [10, "Taco Bell", "$8 off $25+", "Food", 8, 0, 0, 5, 0.28],
   [15, "Starbucks", "Free drink", "Coffee", 5.25, 750, 0, 12, 0.3],
   [20, "Chipotle", "15% off lunch", "Food", 1.8, 0, 0, 20],
