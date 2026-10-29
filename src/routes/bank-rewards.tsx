@@ -10,10 +10,10 @@ import { bankDollars, bankOfferOrder, offerRewardValue, paymentSplit, typicalPur
 export const Route = createFileRoute("/bank-rewards")({
   head: () => ({
     meta: [
-      { title: `Bank points — ${APP_NAME_TITLE}` },
-      { name: "description", content: "Spend your Bank points on offers picked for you, ranked by your time and routine." },
-      { property: "og:title", content: `Bank points — ${APP_NAME_TITLE}` },
-      { property: "og:description", content: "Spend your Bank points on offers picked for you, ranked by your time and routine." },
+      { title: `Credit points — ${APP_NAME_TITLE}` },
+      { name: "description", content: "Spend your Credit points on offers picked for you, ranked by your time and routine." },
+      { property: "og:title", content: `Credit points — ${APP_NAME_TITLE}` },
+      { property: "og:description", content: "Spend your Credit points on offers picked for you, ranked by your time and routine." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -28,14 +28,14 @@ function BankRewards() {
 
   if (!bank.connected) return (
     <AppShell>
-      <ScreenHeader title={`${BANK.name} points`} subtitle={BANK.card} />
+      <ScreenHeader title={BANK.points} subtitle={BANK.card} />
       <p className="rounded-3xl border bg-card p-5 text-sm text-muted-foreground">Your card isn’t connected. <Link to="/smart-match" className="font-semibold text-primary">Connect it on the Connect page</Link> to use your points.</p>
     </AppShell>
   );
 
   return (
     <AppShell>
-      <ScreenHeader title={`${BANK.name} points`} subtitle={`${BANK.card} · 1 pt = 1¢`} />
+      <ScreenHeader title={BANK.points} subtitle={`${BANK.card} · 1 pt = 1¢`} />
       <section aria-label="Points balance" className="bg-ink rounded-3xl p-6">
         <div className="flex items-center gap-3"><BrandLogo name={BANK.name} /><p className="text-sm opacity-80">Your {BANK.points}</p></div>
         <p className="mt-3 text-4xl font-extrabold">{bank.points.toLocaleString()} pts</p>

@@ -62,7 +62,7 @@ export function expiryLabel(o: Pick<Offer, "renews" | "expiresInDays">) {
 /** Cost label: "Use 700 Bank points · $7.00", "750 pts · $5.25", or "$1.80 off" for no-points deals. */
 export function offerCostLabel(o: Pick<Offer, "points" | "value" | "minSpend" | "bankFunded">) {
   const v = `$${o.value.toFixed(2)}`;
-  if (o.bankFunded) return `Use ${Math.round(Math.max(o.value, o.minSpend) * 100).toLocaleString()} Bank points · ${v}`;
+  if (o.bankFunded) return `Use ${Math.round(Math.max(o.value, o.minSpend) * 100).toLocaleString()} Credit points · ${v}`;
   return o.points ? `${o.points.toLocaleString()} pts · ${v}` : `${v} off`;
 }
 

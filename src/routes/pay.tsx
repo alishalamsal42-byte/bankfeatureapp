@@ -33,7 +33,7 @@ function Pay() {
     <AppShell>
       <ScreenHeader title="Pay & transfer" subtitle={`${accounts.checking.name} (…${accounts.checking.last4})`} />
 
-      <Button asChild variant="outline" className="h-auto w-full justify-start rounded-3xl bg-card p-4 text-left whitespace-normal"><Link to="/bank-rewards">Use your Bank points on today’s offers →</Link></Button>
+      <Button asChild variant="outline" className="h-auto w-full justify-start rounded-3xl bg-card p-4 text-left whitespace-normal"><Link to="/bank-rewards">Use your Credit points on today’s offers →</Link></Button>
 
       <h2 className="mt-6 mb-2 flex items-center gap-2 text-sm font-bold"><Send className="h-4 w-4" />Send money</h2>
       <section className="rounded-3xl border bg-card p-4">

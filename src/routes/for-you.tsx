@@ -45,7 +45,7 @@ function ForYou() {
       <ScreenHeader title="Benefits & offers" subtitle={pickedFor} />
       {prefs.history && now && <p aria-label="Spending pace" className="-mt-2 mb-4 text-xs text-muted-foreground">Spending pace: {spendPaceLabel(spendVelocity)}</p>}
       <div className="mb-4 grid grid-cols-2 gap-2 text-sm font-semibold">
-        <Link to="/bank-rewards" className="rounded-2xl border bg-card px-3 py-2.5">Bank points →<span className="block text-xs font-normal text-muted-foreground">Use on your offers</span></Link>
+        <Link to="/bank-rewards" className="rounded-2xl border bg-card px-3 py-2.5">Credit points →<span className="block text-xs font-normal text-muted-foreground">Use on your offers</span></Link>
         <Link to="/smart-match" className="rounded-2xl border bg-card px-3 py-2.5">Connected programs →<span className="block text-xs font-normal text-muted-foreground">Starbucks, Chick-fil-A…</span></Link>
       </div>
       <div className="no-scrollbar -mx-5 mb-4 flex gap-2 overflow-x-auto px-5" aria-label="Reward categories">
