@@ -5,7 +5,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Progress } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { matchLabel, type scoreReward } from "@/lib/model";
-import { offerCostLabel, type Offer } from "@/lib/rewards";
+import { offerCostShort, type Offer } from "@/lib/rewards";
 import { pickReason } from "@/lib/pick-context";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
 import { bankCoversRest, typicalPurchase } from "@/lib/bank";
@@ -19,7 +19,7 @@ export function TopRewardPick({ reward, onSkip, hour, showLocation = true, isStr
   const { scores } = reward;
   const usual = scores.atUsualTime && scores.usualHour !== undefined ? ` · around your usual ${formatHour(scores.usualHour)} ${reward.historyCategory}` : "";
   const location = reward.online ? "Online" : `${Number((reward.distanceMiles ?? 0).toFixed(2))} mi away`;
-  const value = offerCostLabel(reward);
+  const value = offerCostShort(reward);
   const reason = pickReason({ merchant: reward.merchant, hour, category: reward.historyCategory, atUsualTime: Boolean(scores.atUsualTime), usualHour: scores.usualHour, online: reward.online, distanceMiles: reward.distanceMiles, hideDistance: !showLocation, expiresInDays: reward.expiresInDays });
   const strong = scores.match >= 0.10;
   const rows = [
