@@ -20,4 +20,4 @@
 - [x] Reframed as the Rewards section of an unnamed bank app: blue bank header with account tile and Accounts / Pay & transfer / Rewards tabs; bank points are "Bank points"; new Points page (pay at checkout, instant cash back, gift cards); Points tab replaces Redeem in the bottom bar.
 - [x] Bank app: Accounts home (checking, savings, rewards credit card with Bank points, lock card, quick actions, recent transactions from Sarah history), Pay & transfer and Plan & track pages; AI picks and instant redemption live under Benefits & offers.
 - [x] Replace Bank cash-out options with AI-picked offer spending, restore Home reward totals, and verify payments and retained history.
-- [ ] Remove the Low/Medium match badge from the Accounts AI pick and verify its appearance.
+- [x] Remove the Low/Medium match badge from the Accounts AI pick and verify its appearance.
