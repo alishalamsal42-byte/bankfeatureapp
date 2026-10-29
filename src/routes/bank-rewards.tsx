@@ -44,7 +44,8 @@ function BankRewards() {
       <h2 className="mt-6 mb-3 text-base font-bold">Use your points on offers picked for you</h2>
       <div className="divide-y border-y">
         {offers.map(offer => {
-          const points = bankPointsForOffer(offer, bank.points);
+          const total = typicalPurchase(offer);
+          const split = paymentSplit(total, offer.value, bank.points, true);
           return (
             <article key={offer.id} aria-label={`${offer.merchant} offer`} className="py-4">
               {offer.id === bestNow?.id && <p className="mb-2 text-xs font-bold text-success">{topPick ? "AI top pick" : "Good option right now"}</p>}
@@ -53,7 +54,7 @@ function BankRewards() {
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold">{offer.merchant}</p>
                   <p className="text-sm text-muted-foreground">{offer.title}</p>
-                  <p className="mt-1 text-xs font-semibold text-points">{points.toLocaleString()} {BANK.points}</p>
+                  <p className="mt-1 text-xs font-semibold text-points">Typical ${total.toFixed(2)} order: ${split.rewardCovered.toFixed(2)} reward + {split.bankPts.toLocaleString()} {BANK.points} = ${split.charged.toFixed(2)} out of pocket</p>
                 </div>
                 <Button asChild size="sm" className="shrink-0"><Link to="/redeem" search={{ id: offer.id, useBank: true }}>Use points</Link></Button>
               </div>
