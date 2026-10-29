@@ -1,6 +1,6 @@
 /** Pure bank-card points rules for the host bank (unnamed; shown as "Bank"). Kept out of merchant offers so it never gets a match score. */
 import { BANK_NAME } from "./app-config";
-export const BANK = { id: "chase", name: BANK_NAME, label: "Your bank card", points: `${BANK_NAME} points`, card: "Student Debit •••• 4821", checking: 1248.55, pointValue: 0.01, startingPoints: 2340 } as const;
+export const BANK = { id: "chase", name: BANK_NAME, label: "Your bank card", points: `${BANK_NAME} points`, card: "Student Rewards Card •••• 7731", checking: 1248.55, pointValue: 0.01, startingPoints: 2340 } as const;
 
 export const bankDollars = (points: number) => Math.round(points * BANK.pointValue * 100) / 100;
 

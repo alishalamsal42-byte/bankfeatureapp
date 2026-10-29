@@ -4,14 +4,15 @@ import { useRewardEngine } from "@/hooks/recommendation-demo";
 import { RewardNotification } from "./RewardNotification";
 import { RewardDemoPanel } from "./RewardDemoPanel";
 import { Button } from "./ui/button";
-import { Home, Sparkles, Store, Gift, SlidersHorizontal, Undo2, MessageCircle, Signal, Wifi, BatteryFull } from "lucide-react";
+import { Home, Sparkles, SlidersHorizontal, Undo2, MessageCircle, Signal, Wifi, BatteryFull, ArrowLeftRight, PieChart } from "lucide-react";
 
+// Bank-app tabs; the AI rewards feature lives under Benefits.
 const tabs = [
-  { to: "/", label: "Home", icon: Home },
-  { to: "/for-you", label: "For You", icon: Sparkles },
-  { to: "/smart-match", label: "Connect", icon: Store },
-  { to: "/bank-rewards", label: "Points", icon: Gift },
-  { to: "/preferences", label: "Prefs", icon: SlidersHorizontal },
+  { to: "/", label: "Accounts", icon: Home },
+  { to: "/pay", label: "Pay", icon: ArrowLeftRight },
+  { to: "/for-you", label: "Benefits", icon: Sparkles },
+  { to: "/plan", label: "Plan & track", icon: PieChart },
+  { to: "/preferences", label: "More", icon: SlidersHorizontal },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
