@@ -7,10 +7,10 @@ import { CODE_VALID_MS, formatCountdown, isCardOffer, minSpendShortfall, redempt
 import { BANK } from "@/lib/bank";
 import { Input } from "@/components/ui/input";
 import type { Offer } from "@/lib/rewards";
-import { bankSelectionEnabled, paymentSplit, typicalPurchase } from "@/lib/bank";
+import { bankPointsForOffer, bankSelectionEnabled, offerRewardValue, paymentSplit, typicalPurchase } from "@/lib/bank";
 import { Switch } from "@/components/ui/switch";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
-import { getOffer, user } from "@/lib/rewards";
+import { CARD_OFFER_LABEL, getOffer, user } from "@/lib/rewards";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
@@ -48,7 +48,7 @@ function Redeem() {
   const [paid, setPaid] = useState<ReturnType<typeof paymentSplit> | null>(null);
   useEffect(() => { setStep(0); setPaid(null); }, [o.id]);
   useEffect(() => { setUseBank(bankSelectionEnabled(requestedBank === true, prefs.bankAuto, bank.connected)); }, [requestedBank, prefs.bankAuto, bank.connected, o.id]);
-  const split = paymentSplit(askTotal ? amount : typicalPurchase(o), isBank || short > 0 ? 0 : o.value, bank.points, isBank || (useBank && bank.connected));
+  const split = paymentSplit(askTotal ? amount : typicalPurchase(o), isBank || short > 0 ? 0 : offerRewardValue(o), bank.points, isBank || (useBank && bank.connected));
   const confirm = () => { setPaid(split); if (isBank) payWithBank(split.total); else redeemReward(o, split.bankPts); };
   return (
     <AppShell>
@@ -82,7 +82,7 @@ function Redeem() {
         <div className="shadow-soft mt-5 space-y-3 rounded-3xl bg-card p-5 text-sm">
           {[
             ["Value", `$${o.value.toFixed(2)}`],
-            ["Cost", o.points ? `${o.points.toLocaleString()} pts` : "Free card offer"],
+            ["Cost", o.bankFunded ? `${bankPointsForOffer(o, Infinity).toLocaleString()} ${BANK.points}` : o.points ? `${o.points.toLocaleString()} pts` : "Free card offer"],
             ["Minimum spend", o.minSpend ? `$${o.minSpend}` : "None"],
             [o.renews ? "Renews" : "Expires", o.expires],
             ["Terms", "One per customer, eligible purchase only"],
@@ -100,17 +100,18 @@ function Redeem() {
       )}
       {step === 1 && !isBank && (
         <div className="shadow-soft mt-5 rounded-3xl bg-card p-5 text-sm">
+          {o.bankFunded ? <p className="font-semibold">{CARD_OFFER_LABEL}</p> : <>
           <p className="font-semibold">Balance after redeeming</p>
           <p className="mt-1 text-3xl font-extrabold">{Math.max(0, merchantBalance - o.points).toLocaleString()} pts</p>
-          <p className="text-muted-foreground">from {merchantBalance.toLocaleString()} {o.merchant} pts</p>
+          <p className="text-muted-foreground">from {merchantBalance.toLocaleString()} {o.merchant} pts</p></>}
           {bank.connected && <div className="mt-4 border-t pt-4">
             <label className="flex items-center justify-between gap-3">
               <span><span className="block font-semibold">Use {BANK.points} for the rest</span><span className="text-xs text-muted-foreground">{bank.points.toLocaleString()} pts ≈ ${bank.dollars.toFixed(2)} available</span></span>
               <Switch checked={useBank} onCheckedChange={setUseBank} aria-label={`Use ${BANK.points} for the rest`} />
             </label>
             <div className="mt-3 space-y-1">
-              <div className="flex justify-between"><span className="text-muted-foreground">{askTotal ? "Purchase total" : "Typical purchase"}</span><span>${split.total.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">{o.merchant} reward</span><span>−${split.rewardCovered.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">{o.bankFunded ? "Bill" : askTotal ? "Purchase total" : "Typical purchase"}</span><span>${split.total.toFixed(2)}</span></div>
+              {!o.bankFunded && <div className="flex justify-between"><span className="text-muted-foreground">{o.merchant} reward</span><span>−${split.rewardCovered.toFixed(2)}</span></div>}
               {split.bankPts > 0 && <div className="flex justify-between"><span className="text-muted-foreground">{BANK.points} ({split.bankPts.toLocaleString()} pts)</span><span>−${split.bankCovered.toFixed(2)}</span></div>}
               <div className="flex justify-between font-bold"><span>Charged to card</span><span>${split.charged.toFixed(2)}</span></div>
             </div>
@@ -118,7 +119,7 @@ function Redeem() {
         </div>
       )}
       {step === 2 && paid && (isBank || paid.bankPts > 0 || isCardOffer(o) ? <TapToPay split={paid} chase={paid.bankPts > 0} offerNote={!isBank && isCardOffer(o)} summary={[
-        `${isBank ? `${paid.bankPts.toLocaleString()} ${BANK.name} pts` : [o.points ? `${o.points.toLocaleString()} ${o.merchant} pts` : 'Card offer', ...(paid.bankPts ? [`${paid.bankPts.toLocaleString()} ${BANK.name} pts`] : [])].join(' + ')} used · You saved $${(paid.rewardCovered + paid.bankCovered).toFixed(2)}`,
+        `${isBank ? `${paid.bankPts.toLocaleString()} ${BANK.name} pts` : [o.points ? `${o.points.toLocaleString()} ${o.merchant} pts` : o.bankFunded ? CARD_OFFER_LABEL : 'Card offer', ...(paid.bankPts ? [`${paid.bankPts.toLocaleString()} ${BANK.name} pts`] : [])].join(' + ')} used · You saved $${(paid.rewardCovered + paid.bankCovered).toFixed(2)}`,
         ...(!isBank && o.points > 0 ? [`Remaining ${o.merchant} balance: ${(connectedApps.find(a => a.merchant === o.merchant)?.points ?? 0).toLocaleString()} pts`] : []),
         ...(paid.bankPts > 0 ? [`Remaining ${BANK.name} balance: ${bank.points.toLocaleString()} pts`] : []),
       ]} /> : <MerchantCode offer={o} balance={connectedApps.find(a => a.merchant === o.merchant)?.points ?? 0} onExpire={() => returnReward(o.id)} onRenew={() => redeemReward(o, 0)} />)}

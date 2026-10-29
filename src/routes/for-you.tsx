@@ -1,3 +1,4 @@
+import { CARD_OFFER_LABEL } from "@/lib/rewards";
 import { APP_NAME_TITLE } from "@/lib/app-config";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
@@ -65,7 +66,7 @@ function ForYou() {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-bold">{o.merchant}</p>
                 <p className="text-xs text-muted-foreground">{o.title}</p>
-                <p className="mt-1 text-xs font-bold text-points">{o.points ? `${o.points.toLocaleString()} pts` : "Card offer"} · ${o.value.toFixed(2)}</p>
+                <p className="mt-1 text-xs font-bold text-points">{o.points ? `${o.points.toLocaleString()} pts` : o.bankFunded ? CARD_OFFER_LABEL : "Card offer"} · ${o.value.toFixed(2)}</p>
               </div>
               <Button asChild size="sm"><Link to="/redeem" search={{ id: o.id }}>Get</Link></Button>
             </div>
