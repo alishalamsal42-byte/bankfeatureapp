@@ -15,6 +15,8 @@ import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as BankRewardsRouteImport } from './routes/bank-rewards'
 import { Route as ForYouRouteImport } from './routes/for-you'
 import { Route as ImpactRouteImport } from './routes/impact'
+import { Route as PayRouteImport } from './routes/pay'
+import { Route as PlanRouteImport } from './routes/plan'
 import { Route as PreferencesRouteImport } from './routes/preferences'
 import { Route as RedeemRouteImport } from './routes/redeem'
 import { Route as SavingsRouteImport } from './routes/savings'
@@ -50,6 +52,16 @@ const ImpactRoute = ImpactRouteImport.update({
   path: '/impact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PayRoute = PayRouteImport.update({
+  id: '/pay',
+  path: '/pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanRoute = PlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PreferencesRoute = PreferencesRouteImport.update({
   id: '/preferences',
   path: '/preferences',
@@ -78,6 +90,8 @@ export interface FileRoutesByFullPath {
   '/bank-rewards': typeof BankRewardsRoute
   '/for-you': typeof ForYouRoute
   '/impact': typeof ImpactRoute
+  '/pay': typeof PayRoute
+  '/plan': typeof PlanRoute
   '/preferences': typeof PreferencesRoute
   '/redeem': typeof RedeemRoute
   '/savings': typeof SavingsRoute
@@ -90,6 +104,8 @@ export interface FileRoutesByTo {
   '/bank-rewards': typeof BankRewardsRoute
   '/for-you': typeof ForYouRoute
   '/impact': typeof ImpactRoute
+  '/pay': typeof PayRoute
+  '/plan': typeof PlanRoute
   '/preferences': typeof PreferencesRoute
   '/redeem': typeof RedeemRoute
   '/savings': typeof SavingsRoute
@@ -103,6 +119,8 @@ export interface FileRoutesById {
   '/bank-rewards': typeof BankRewardsRoute
   '/for-you': typeof ForYouRoute
   '/impact': typeof ImpactRoute
+  '/pay': typeof PayRoute
+  '/plan': typeof PlanRoute
   '/preferences': typeof PreferencesRoute
   '/redeem': typeof RedeemRoute
   '/savings': typeof SavingsRoute
@@ -117,6 +135,8 @@ export interface FileRouteTypes {
     | '/bank-rewards'
     | '/for-you'
     | '/impact'
+    | '/pay'
+    | '/plan'
     | '/preferences'
     | '/redeem'
     | '/savings'
@@ -129,6 +149,8 @@ export interface FileRouteTypes {
     | '/bank-rewards'
     | '/for-you'
     | '/impact'
+    | '/pay'
+    | '/plan'
     | '/preferences'
     | '/redeem'
     | '/savings'
@@ -141,6 +163,8 @@ export interface FileRouteTypes {
     | '/bank-rewards'
     | '/for-you'
     | '/impact'
+    | '/pay'
+    | '/plan'
     | '/preferences'
     | '/redeem'
     | '/savings'
@@ -154,6 +178,8 @@ export interface RootRouteChildren {
   BankRewardsRoute: typeof BankRewardsRoute
   ForYouRoute: typeof ForYouRoute
   ImpactRoute: typeof ImpactRoute
+  PayRoute: typeof PayRoute
+  PlanRoute: typeof PlanRoute
   PreferencesRoute: typeof PreferencesRoute
   RedeemRoute: typeof RedeemRoute
   SavingsRoute: typeof SavingsRoute
@@ -204,6 +230,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ImpactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pay': {
+      id: '/pay'
+      path: '/pay'
+      fullPath: '/pay'
+      preLoaderRoute: typeof PayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plan': {
+      id: '/plan'
+      path: '/plan'
+      fullPath: '/plan'
+      preLoaderRoute: typeof PlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/preferences': {
       id: '/preferences'
       path: '/preferences'
@@ -242,6 +282,8 @@ const rootRouteChildren: RootRouteChildren = {
   BankRewardsRoute: BankRewardsRoute,
   ForYouRoute: ForYouRoute,
   ImpactRoute: ImpactRoute,
+  PayRoute: PayRoute,
+  PlanRoute: PlanRoute,
   PreferencesRoute: PreferencesRoute,
   RedeemRoute: RedeemRoute,
   SavingsRoute: SavingsRoute,
