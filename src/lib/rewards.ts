@@ -66,6 +66,12 @@ export function offerCostLabel(o: Pick<Offer, "points" | "value" | "minSpend" | 
   return o.points ? `${o.points.toLocaleString()} pts · ${v}` : `${v} off`;
 }
 
+/** Compact cost for list rows: "700 pts" for card offers, otherwise the full label. */
+export function offerCostShort(o: Pick<Offer, "points" | "value" | "minSpend" | "bankFunded">) {
+  if (o.bankFunded) return `${Math.round(Math.max(o.value, o.minSpend) * 100).toLocaleString()} pts`;
+  return offerCostLabel(o);
+}
+
 export const user = { name: "Sarah", school: "UNF", points: 8430, pointValue: 0.01 };
 
 /** Brands the app connects to. */
