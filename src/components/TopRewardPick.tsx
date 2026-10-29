@@ -8,7 +8,7 @@ import { matchLabel, type scoreReward } from "@/lib/model";
 import { offerCostShort, type Offer } from "@/lib/rewards";
 import { pickReason } from "@/lib/pick-context";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
-import { bankCoversRest, typicalPurchase } from "@/lib/bank";
+import { BANK, bankCoversRest, typicalPurchase } from "@/lib/bank";
 
 type RankedOffer = Offer & { scores: ReturnType<typeof scoreReward> };
 const formatHour = (hour: number) => `${Math.floor(hour) % 12 || 12}${hour % 1 ? ":30" : ""} ${hour >= 12 ? "PM" : "AM"}`;
@@ -45,7 +45,7 @@ export function TopRewardPick({ reward, onSkip, hour, showLocation = true, isStr
     </div>
     <p className="mt-4 text-sm text-muted-foreground">{reason}</p>
     {learning.events.length > 0 && <p className="mt-2 text-xs font-semibold text-primary">Updated from your last {learning.events.length} {learning.events.length === 1 ? "action" : "actions"}.</p>}
-    {bankLine && <p className="mt-2 text-sm font-semibold text-success">Pay $0 with {reward.merchant} {reward.title.toLowerCase()} + {bank.offer.merchant} points.</p>}
+    {bankLine && <p className="mt-2 text-sm font-semibold text-success">Pay $0 with {reward.merchant} {reward.title.toLowerCase()} + {BANK.points}.</p>}
     <Button asChild className="mt-4 h-12 w-full"><Link to="/redeem" search={{ id: reward.id }}>Pay with points<ArrowRight /></Link></Button>
     <div className="mt-1 text-center"><Button variant="link" onClick={onSkip} className="text-muted-foreground">Not now</Button></div>
   </section>;
