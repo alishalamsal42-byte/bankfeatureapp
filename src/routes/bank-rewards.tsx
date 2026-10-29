@@ -4,7 +4,7 @@ import { AppShell, ScreenHeader } from "@/components/AppShell";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
-import { bankDollars, bankOfferOrder, bankPointsForOffer, BANK } from "@/lib/bank";
+import { bankDollars, bankOfferOrder, paymentSplit, typicalPurchase, BANK } from "@/lib/bank";
 
 export const Route = createFileRoute("/bank-rewards")({
   head: () => ({
