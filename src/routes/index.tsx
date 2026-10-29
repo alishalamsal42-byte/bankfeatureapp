@@ -11,7 +11,6 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { user, merchantWebsite, closestProgress, isLocked } from "@/lib/rewards";
 import { useEffect, useState } from "react";
 import { useRecommendationState } from "@/hooks/use-recommendations";
-import { matchLabel } from "@/lib/model";
 import { connectionTotal } from "@/lib/connection-catalog";
 import { Button } from "@/components/ui/button";
 import { MerchantHandoff } from "@/components/MerchantHandoff";
@@ -109,7 +108,6 @@ function HomeScreen() {
             <p className="truncate font-bold">{top.title}</p>
             <p className="text-sm text-muted-foreground">{top.merchant}{top.online ? " · Online" : prefs.location ? ` · ${Number((top.distanceMiles ?? 0).toFixed(1))} mi away` : ""}</p>
           </div>
-          <span className="bg-peach shrink-0 rounded-full px-3 py-1 text-xs font-semibold">{matchLabel(top.scores.match)}</span>
         </div>
         <div className="mt-3 flex items-center gap-3">
           <Button asChild className="h-11 flex-1 rounded-2xl"><Link to="/redeem" search={{ id: top.id }}>Pay with rewards</Link></Button>
