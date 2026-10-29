@@ -39,3 +39,19 @@ describe("offer cost wording", () => {
     expect(bpo(go("amazon"), 2340)).toBe(1000);
   });
 });
+
+import { offerCostShort } from "./rewards";
+describe("compact cost under offers", () => {
+  it("shows just the points number for card offers", () => {
+    expect(offerCostShort(go("netflix"))).toBe("700 pts");
+    expect(offerCostShort(go("spotify"))).toBe("600 pts");
+    expect(offerCostShort(go("amazon"))).toBe("1,000 pts");
+    for (const id of ["netflix", "spotify", "amazon"]) {
+      expect(offerCostShort(go(id))).not.toContain("Credit points");
+    }
+  });
+  it("keeps merchant and no-points wording", () => {
+    expect(offerCostShort(go("coffee"))).toBe("750 pts · $5.25");
+    expect(offerCostShort(go("lunch"))).toBe("$1.80 off");
+  });
+});
