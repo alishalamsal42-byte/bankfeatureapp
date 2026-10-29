@@ -48,6 +48,8 @@ export type Offer = ScorableReward & {
   openHours?: OpenHours;
   /** Subscription credit: show "Renews" instead of "Expires". */
   renews?: boolean;
+  /** Bank credit card offer: no merchant balance, the bill is paid with Bank points. */
+  bankFunded?: boolean;
 };
 
 /** "Renews in 3 days" for subscriptions, "Expires in 3 days" otherwise. */
@@ -56,6 +58,9 @@ export function expiryLabel(o: Pick<Offer, "renews" | "expiresInDays">) {
   const verb = o.renews ? "Renews" : "Expires";
   return d === 0 ? `${verb} today` : d === 1 ? `${verb} tomorrow` : `${verb} in ${d} days`;
 }
+
+/** Label for bank card offers paid with Bank points. */
+export const CARD_OFFER_LABEL = "Card offer · paid with Bank points";
 
 export const user = { name: "Sarah", school: "UNF", points: 8430, pointValue: 0.01 };
 
@@ -130,8 +135,8 @@ const baseOffers = [
   { id: "lyft", merchant: "Lyft", emoji: "🚗", category: "Travel", title: "$4 off a ride", points: 400, value: 4, minSpend: 0, expires: "7 days", reason: "A ride near campus" },
   { id: "publix", merchant: "Publix", emoji: "", category: "Grocery", title: "$5 off $40+", points: 0, value: 5, minSpend: 40, expires: "6 days", reason: "Your usual grocery run" },
   { id: "walmart", merchant: "Walmart", emoji: "", category: "Grocery", title: "$3 Walmart Cash", points: 300, value: 3, minSpend: 0, expires: "14 days", reason: "Groceries near Town Center" },
-  { id: "netflix", merchant: "Netflix", emoji: "", category: "Online", title: "$7 off your next month", points: 700, value: 7, minSpend: 0, expires: "3 days", renews: true, reason: "Your plan renews soon" },
-  { id: "spotify", merchant: "Spotify", emoji: "", category: "Online", title: "1 month of Premium Student", points: 600, value: 6, minSpend: 0, expires: "5 days", renews: true, reason: "Your plan renews soon" },
+  { id: "netflix", merchant: "Netflix", emoji: "", category: "Online", title: "$7 credit on your next bill", points: 0, bankFunded: true, value: 7, minSpend: 0, expires: "3 days", renews: true, reason: "Your plan renews soon" },
+  { id: "spotify", merchant: "Spotify", emoji: "", category: "Online", title: "$6 credit on Premium Student", points: 0, bankFunded: true, value: 6, minSpend: 0, expires: "5 days", renews: true, reason: "Your plan renews soon" },
   { id: "movie", merchant: "AMC Cinema", emoji: "🎬", category: "Fun", title: "1 ticket", points: 1800, value: 14, minSpend: 0, expires: "30 days", reason: "You spent 15% less on dining this week" },
 ] satisfies Omit<Offer, "modelCategory" | "historyCategory" | "distanceMiles" | "online">[];
 
@@ -148,7 +153,7 @@ export const openingHours: Record<string, OpenHours> = {
 };
 
 /** Example grocery and online partners, connected by default alongside the main brands. */
-export const examplePartnerIds = ["publix", "target", "walmart", "netflix", "spotify"] as const;
+export const examplePartnerIds = ["publix", "target", "walmart"] as const;
 
 export const offers: Offer[] = baseOffers.map(o => {
   const modelCategory = o.category === "Coffee" ? "coffee" : o.category === "Food" ? "food" : o.category === "Grocery" ? "grocery" : o.category === "Online" || o.merchant === "Amazon" ? "online" : o.merchant === "Uber" || o.merchant === "Lyft" ? "ride" : undefined;
