@@ -7,7 +7,7 @@ const DAY = 86_400_000;
 export const accounts = {
   checking: { name: "Student Checking", last4: "4821", balance: BANK.checking },
   savings: { name: "Savings", last4: "0912", balance: 3420 },
-  card: { name: "Student Rewards Card", last4: "7731", balance: 214.37, limit: 1500 },
+  card: { name: "Student Credit Card", last4: "7731", balance: 214.37, limit: 1500 },
 } as const;
 
 /** Typical amount Sarah spends per purchase, by category (demo values). */
