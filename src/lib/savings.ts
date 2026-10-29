@@ -72,4 +72,4 @@ export function smartPicks(list: Redemption[]) {
 }
 
 export const paidWith = (r: Redemption) =>
-  r.bankPts ? `${r.title} + ${r.bankPts.toLocaleString()} ${BANK.name} pts` : r.points ? `${r.title} · ${r.points.toLocaleString()} pts` : r.title;
+  r.bankPts ? `${r.title} + ${r.bankPts.toLocaleString()} ${BANK.points}` : r.points ? `${r.title} · ${r.points.toLocaleString()} pts` : r.title;

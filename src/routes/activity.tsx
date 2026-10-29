@@ -37,7 +37,7 @@ function Activity() {
               <BrandLogo name={r.merchant} />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold">{r.merchant}</p>
-                <p className="text-xs text-muted-foreground">{r.bankPts ? `$${(r.rewardValue ?? 0).toFixed(2)} ${r.title.toLowerCase()} + ${r.bankPts.toLocaleString()} ${BANK.name} pts` : r.title} · {new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</p>
+                <p className="text-xs text-muted-foreground">{r.bankPts ? `$${(r.rewardValue ?? 0).toFixed(2)} ${r.title.toLowerCase()} + ${r.bankPts.toLocaleString()} ${BANK.points}` : r.title} · {new Date(r.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</p>
               </div>
               <span className="text-sm font-bold text-success">${r.saved.toFixed(2)} saved</span>
             </div>

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BANK, bankCoversRest, bankDollars, paymentSplit, typicalPurchase } from "./bank";
 
-describe("Chase bank points", () => {
+describe("Credit points", () => {
   it("starts at 2,340 pts worth $23.40 (1 cent each)", () => {
     expect(BANK.startingPoints).toBe(2340);
     expect(bankDollars(2340)).toBe(23.4);
