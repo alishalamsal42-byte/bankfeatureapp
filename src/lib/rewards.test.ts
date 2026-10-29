@@ -7,7 +7,7 @@ describe("partners", () => {
     expect(partnerLogo["Uber"]).toBeTruthy();
     expect(partnerLogo["Lyft"]).toBeTruthy();
   });
-  it("contains exactly the ten brands the user listed", () => {
+  it("lists merchant programs; Amazon is a bank-funded offer, not a connected app", () => {
     expect([...partners]).toEqual([
       "Starbucks",
       "Chick-fil-A",
@@ -16,7 +16,6 @@ describe("partners", () => {
       "McDonald's",
       "Burger King",
       "Chipotle",
-      "Amazon",
       "Best Buy",
       "Nike",
     ]);

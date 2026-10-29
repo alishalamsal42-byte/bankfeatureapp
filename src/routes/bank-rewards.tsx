@@ -1,4 +1,4 @@
-import { CARD_OFFER_LABEL, expiryLabel } from "@/lib/rewards";
+import { expiryLabel } from "@/lib/rewards";
 import { APP_NAME_TITLE } from "@/lib/app-config";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
@@ -57,7 +57,7 @@ function BankRewards() {
                   <p className="text-sm font-bold">{offer.merchant}</p>
                   <p className="text-sm text-muted-foreground">{offer.title}</p>
                   {offer.bankFunded ? <p className="mt-1 text-xs font-semibold text-points">${total.toFixed(2)} bill: {split.bankPts.toLocaleString()} {BANK.points} = {charged} out of pocket</p> : <p className="mt-1 text-xs font-semibold text-points">Typical ${total.toFixed(2)} order: ${split.rewardCovered.toFixed(2)} reward + {split.bankPts.toLocaleString()} {BANK.points} = {charged} out of pocket</p>}
-                  {offer.bankFunded && <p className="text-xs text-muted-foreground">{CARD_OFFER_LABEL} · {expiryLabel(offer)}</p>}
+                  {offer.bankFunded && <p className="text-xs text-muted-foreground">{expiryLabel(offer)}</p>}
                 </div>
                 <Button asChild size="sm" className="shrink-0"><Link to="/redeem" search={{ id: offer.id, useBank: true }}>Use points</Link></Button>
               </div>

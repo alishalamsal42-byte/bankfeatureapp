@@ -59,8 +59,12 @@ export function expiryLabel(o: Pick<Offer, "renews" | "expiresInDays">) {
   return d === 0 ? `${verb} today` : d === 1 ? `${verb} tomorrow` : `${verb} in ${d} days`;
 }
 
-/** Label for bank card offers paid with Bank points. */
-export const CARD_OFFER_LABEL = "Card offer · paid with Bank points";
+/** Cost label: "Use 700 Bank points · $7.00", "750 pts · $5.25", or "$1.80 off" for no-points deals. */
+export function offerCostLabel(o: Pick<Offer, "points" | "value" | "minSpend" | "bankFunded">) {
+  const v = `$${o.value.toFixed(2)}`;
+  if (o.bankFunded) return `Use ${Math.round(Math.max(o.value, o.minSpend) * 100).toLocaleString()} Bank points · ${v}`;
+  return o.points ? `${o.points.toLocaleString()} pts · ${v}` : `${v} off`;
+}
 
 export const user = { name: "Sarah", school: "UNF", points: 8430, pointValue: 0.01 };
 
@@ -73,7 +77,6 @@ export const partners = [
   "McDonald's",
   "Burger King",
   "Chipotle",
-  "Amazon",
   "Best Buy",
   "Nike",
 ] as const;
@@ -127,7 +130,7 @@ const baseOffers = [
   { id: "mcd", merchant: "McDonald's", emoji: "🍟", category: "Food", title: "Free McFlurry", points: 380, value: 3.8, minSpend: 0, expires: "30 days", reason: "Your usual Friday order", unlock: { reward: "McFlurry", goal: 500 } },
   { id: "bk", merchant: "Burger King", emoji: "👑", category: "Food", title: "$5 off $15+", points: 0, value: 5, minSpend: 15, expires: "4 days", reason: "Requires spending $3 more than you usually do" },
   { id: "taco", merchant: "Taco Bell", emoji: "🌮", category: "Food", title: "$8 off $25+", points: 0, value: 8, minSpend: 25, expires: "5 days", reason: "Requires spending $13 more than you usually do", distance: "900 m" },
-  { id: "amazon", merchant: "Amazon", emoji: "📦", category: "Shopping", title: "$10 voucher", points: 1000, value: 10, minSpend: 0, expires: "2 days", reason: "Expiring soon — don't lose $10 of value" },
+  { id: "amazon", merchant: "Amazon", emoji: "📦", category: "Shopping", title: "$10 off your order", points: 0, bankFunded: true, value: 10, minSpend: 0, expires: "2 days", reason: "Expiring soon — don't lose $10 of value" },
   { id: "nike", merchant: "Nike", emoji: "👟", category: "Shopping", title: "20% off shoes", points: 2500, value: 18, minSpend: 0, expires: "14 days", reason: "You browsed running shoes last week" },
   { id: "tjx", merchant: "TJ Maxx", emoji: "🛍️", category: "Shopping", title: "$15 voucher", points: 1500, value: 15, minSpend: 0, expires: "10 days", reason: "New store 5 min from campus" },
   { id: "bb", merchant: "Best Buy", emoji: "🎧", category: "Shopping", title: "$20 off $100+", points: 2000, value: 20, minSpend: 100, expires: "6 days", reason: "Requires spending $88 more than you usually do" },
@@ -135,8 +138,8 @@ const baseOffers = [
   { id: "lyft", merchant: "Lyft", emoji: "🚗", category: "Travel", title: "$4 off a ride", points: 400, value: 4, minSpend: 0, expires: "7 days", reason: "A ride near campus" },
   { id: "publix", merchant: "Publix", emoji: "", category: "Grocery", title: "$5 off $40+", points: 0, value: 5, minSpend: 40, expires: "6 days", reason: "Your usual grocery run" },
   { id: "walmart", merchant: "Walmart", emoji: "", category: "Grocery", title: "$3 Walmart Cash", points: 300, value: 3, minSpend: 0, expires: "14 days", reason: "Groceries near Town Center" },
-  { id: "netflix", merchant: "Netflix", emoji: "", category: "Online", title: "$7 credit on your next bill", points: 0, bankFunded: true, value: 7, minSpend: 0, expires: "3 days", renews: true, reason: "Your plan renews soon" },
-  { id: "spotify", merchant: "Spotify", emoji: "", category: "Online", title: "$6 credit on Premium Student", points: 0, bankFunded: true, value: 6, minSpend: 0, expires: "5 days", renews: true, reason: "Your plan renews soon" },
+  { id: "netflix", merchant: "Netflix", emoji: "", category: "Online", title: "$7 off your next bill", points: 0, bankFunded: true, value: 7, minSpend: 0, expires: "3 days", renews: true, reason: "Your plan renews soon" },
+  { id: "spotify", merchant: "Spotify", emoji: "", category: "Online", title: "$6 off Premium Student", points: 0, bankFunded: true, value: 6, minSpend: 0, expires: "5 days", renews: true, reason: "Your plan renews soon" },
   { id: "movie", merchant: "AMC Cinema", emoji: "🎬", category: "Fun", title: "1 ticket", points: 1800, value: 14, minSpend: 0, expires: "30 days", reason: "You spent 15% less on dining this week" },
 ] satisfies Omit<Offer, "modelCategory" | "historyCategory" | "distanceMiles" | "online">[];
 

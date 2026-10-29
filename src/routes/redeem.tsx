@@ -10,7 +10,7 @@ import type { Offer } from "@/lib/rewards";
 import { bankPointsForOffer, bankSelectionEnabled, offerRewardValue, paymentSplit, typicalPurchase } from "@/lib/bank";
 import { Switch } from "@/components/ui/switch";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
-import { CARD_OFFER_LABEL, getOffer, user } from "@/lib/rewards";
+import { getOffer, user } from "@/lib/rewards";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
@@ -82,7 +82,7 @@ function Redeem() {
         <div className="shadow-soft mt-5 space-y-3 rounded-3xl bg-card p-5 text-sm">
           {[
             ["Value", `$${o.value.toFixed(2)}`],
-            ["Cost", o.bankFunded ? `${bankPointsForOffer(o, Infinity).toLocaleString()} ${BANK.points}` : o.points ? `${o.points.toLocaleString()} pts` : "Free card offer"],
+            ["Cost", o.bankFunded ? `${bankPointsForOffer(o, Infinity).toLocaleString()} ${BANK.points}` : o.points ? `${o.points.toLocaleString()} pts` : "No points needed"],
             ["Minimum spend", o.minSpend ? `$${o.minSpend}` : "None"],
             [o.renews ? "Renews" : "Expires", o.expires],
             ["Terms", "One per customer, eligible purchase only"],
@@ -100,7 +100,7 @@ function Redeem() {
       )}
       {step === 1 && !isBank && (
         <div className="shadow-soft mt-5 rounded-3xl bg-card p-5 text-sm">
-          {o.bankFunded ? <p className="font-semibold">{CARD_OFFER_LABEL}</p> : <>
+          {o.bankFunded ? <p className="font-semibold">Use {bankPointsForOffer(o, Infinity).toLocaleString()} {BANK.points} · ${o.value.toFixed(2)}</p> : <>
           <p className="font-semibold">Balance after redeeming</p>
           <p className="mt-1 text-3xl font-extrabold">{Math.max(0, merchantBalance - o.points).toLocaleString()} pts</p>
           <p className="text-muted-foreground">from {merchantBalance.toLocaleString()} {o.merchant} pts</p></>}
@@ -119,7 +119,7 @@ function Redeem() {
         </div>
       )}
       {step === 2 && paid && (isBank || paid.bankPts > 0 || isCardOffer(o) ? <TapToPay split={paid} chase={paid.bankPts > 0} offerNote={!isBank && isCardOffer(o)} summary={[
-        `${isBank ? `${paid.bankPts.toLocaleString()} ${BANK.name} pts` : [o.points ? `${o.points.toLocaleString()} ${o.merchant} pts` : o.bankFunded ? CARD_OFFER_LABEL : 'Card offer', ...(paid.bankPts ? [`${paid.bankPts.toLocaleString()} ${BANK.name} pts`] : [])].join(' + ')} used · You saved $${(paid.rewardCovered + paid.bankCovered).toFixed(2)}`,
+        `${isBank ? `${paid.bankPts.toLocaleString()} ${BANK.name} pts` : [o.points ? `${o.points.toLocaleString()} ${o.merchant} pts` : o.bankFunded ? null : `$${o.value.toFixed(2)} off`, ...(paid.bankPts ? [`${paid.bankPts.toLocaleString()} ${BANK.name} pts`] : [])].filter(Boolean).join(' + ')} used · You saved $${(paid.rewardCovered + paid.bankCovered).toFixed(2)}`,
         ...(!isBank && o.points > 0 ? [`Remaining ${o.merchant} balance: ${(connectedApps.find(a => a.merchant === o.merchant)?.points ?? 0).toLocaleString()} pts`] : []),
         ...(paid.bankPts > 0 ? [`Remaining ${BANK.name} balance: ${bank.points.toLocaleString()} pts`] : []),
       ]} /> : <MerchantCode offer={o} balance={connectedApps.find(a => a.merchant === o.merchant)?.points ?? 0} onExpire={() => returnReward(o.id)} onRenew={() => redeemReward(o, 0)} />)}

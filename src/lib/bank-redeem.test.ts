@@ -29,3 +29,13 @@ describe("bank-funded card offers", () => {
     expect(ep).not.toContain("spotify");
   });
 });
+
+import { offerCostLabel } from "./rewards";
+describe("offer cost wording", () => {
+  it("never says Card offer", () => {
+    expect(offerCostLabel(go("netflix"))).toBe("Use 700 Bank points · $7.00");
+    expect(offerCostLabel(go("amazon"))).toBe("Use 1,000 Bank points · $10.00");
+    expect(offerCostLabel(go("lunch"))).toBe("$1.80 off");
+    expect(bpo(go("amazon"), 2340)).toBe(1000);
+  });
+});
