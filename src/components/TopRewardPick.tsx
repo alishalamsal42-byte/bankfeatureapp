@@ -5,10 +5,10 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Progress } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { matchLabel, type scoreReward } from "@/lib/model";
-import { offerCostLabel, type Offer } from "@/lib/rewards";
+import { offerCostShort, type Offer } from "@/lib/rewards";
 import { pickReason } from "@/lib/pick-context";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
-import { bankCoversRest, typicalPurchase } from "@/lib/bank";
+import { bankCoversRest, bankPointsForOffer, typicalPurchase } from "@/lib/bank";
 
 type RankedOffer = Offer & { scores: ReturnType<typeof scoreReward> };
 const formatHour = (hour: number) => `${Math.floor(hour) % 12 || 12}${hour % 1 ? ":30" : ""} ${hour >= 12 ? "PM" : "AM"}`;
@@ -19,7 +19,7 @@ export function TopRewardPick({ reward, onSkip, hour, showLocation = true, isStr
   const { scores } = reward;
   const usual = scores.atUsualTime && scores.usualHour !== undefined ? ` · around your usual ${formatHour(scores.usualHour)} ${reward.historyCategory}` : "";
   const location = reward.online ? "Online" : `${Number((reward.distanceMiles ?? 0).toFixed(2))} mi away`;
-  const value = offerCostLabel(reward);
+  const value = offerCostShort(reward);
   const reason = pickReason({ merchant: reward.merchant, hour, category: reward.historyCategory, atUsualTime: Boolean(scores.atUsualTime), usualHour: scores.usualHour, online: reward.online, distanceMiles: reward.distanceMiles, hideDistance: !showLocation, expiresInDays: reward.expiresInDays });
   const strong = scores.match >= 0.10;
   const rows = [
@@ -45,7 +45,7 @@ export function TopRewardPick({ reward, onSkip, hour, showLocation = true, isStr
     </div>
     <p className="mt-4 text-sm text-muted-foreground">{reason}</p>
     {learning.events.length > 0 && <p className="mt-2 text-xs font-semibold text-primary">Updated from your last {learning.events.length} {learning.events.length === 1 ? "action" : "actions"}.</p>}
-    {bankLine && <p className="mt-2 text-sm font-semibold text-success">Pay $0 with {reward.merchant} {reward.title.toLowerCase()} + {bank.offer.merchant} points.</p>}
+    {bankLine && <p className="mt-2 text-sm font-semibold text-success">Pay $0 with {reward.merchant} {reward.title.toLowerCase()} + {bankPointsForOffer(reward, bank.points).toLocaleString()} pts.</p>}
     <Button asChild className="mt-4 h-12 w-full"><Link to="/redeem" search={{ id: reward.id }}>Pay with points<ArrowRight /></Link></Button>
     <div className="mt-1 text-center"><Button variant="link" onClick={onSkip} className="text-muted-foreground">Not now</Button></div>
   </section>;
