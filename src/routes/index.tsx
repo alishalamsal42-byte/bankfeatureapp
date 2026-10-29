@@ -8,7 +8,7 @@ import { accounts, categoryLabel, recentTransactions } from "@/lib/banking";
 import { APP_NAME } from "@/lib/app-config";
 import { AppShell, useDemoTitleTap } from "@/components/AppShell";
 import { BrandLogo } from "@/components/BrandLogo";
-import { user, merchantWebsite, closestProgress, isLocked } from "@/lib/rewards";
+import { user, merchantWebsite, closestProgress, isLocked, expiryLabel } from "@/lib/rewards";
 import { useEffect, useState } from "react";
 import { useRecommendationState } from "@/hooks/use-recommendations";
 import { connectionTotal } from "@/lib/connection-catalog";
@@ -120,7 +120,7 @@ function HomeScreen() {
         <section className="mt-2 divide-y rounded-3xl border bg-card px-4">
           {expiring.map(o => <Link key={o.id} to="/redeem" search={{ id: o.id }} className="flex items-center gap-3 py-3">
             <BrandLogo name={o.merchant} />
-            <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{o.title}</p><p className="text-xs text-muted-foreground">{o.merchant} · {o.expiresInDays === 0 ? "Expires today" : o.expiresInDays === 1 ? "Expires tomorrow" : `Expires in ${o.expiresInDays} days`}</p></div>
+            <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{o.title}</p><p className="text-xs text-muted-foreground">{o.merchant} · {expiryLabel(o)}</p></div>
             <span className="text-sm font-bold">${o.value.toFixed(2)}</span>
           </Link>)}
         </section>

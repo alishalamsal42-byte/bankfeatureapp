@@ -78,7 +78,7 @@ function MerchantDetails({ offer, onClose, onDisconnect }: { offer: Offer; onClo
     <dl className="mt-5 divide-y text-sm">
       <div className="flex justify-between py-3"><dt>Reward</dt><dd>{offer.title}</dd></div>
       {offer.minSpend > 0 && <div className="flex justify-between py-3"><dt>Minimum purchase</dt><dd>${offer.minSpend}</dd></div>}
-      <div className="flex justify-between py-3"><dt>Expires</dt><dd className={soon ? 'font-semibold text-warning' : ''}>{soon ? (days === 0 ? 'Expires today' : days === 1 ? 'Expires tomorrow' : `Expires in ${days} days`) : offer.expires}</dd></div>
+      <div className="flex justify-between py-3"><dt>{offer.renews ? 'Renews' : 'Expires'}</dt><dd className={soon ? 'font-semibold text-warning' : ''}>{soon ? expiryLabel({ renews: offer.renews, expiresInDays: days }) : offer.expires}</dd></div>
     </dl>
     {action === 'handoff' ? <>
       <Button className="mt-5 h-12 w-full rounded-full" onClick={() => setHandoff(true)}>Order on {offer.merchant} →</Button>

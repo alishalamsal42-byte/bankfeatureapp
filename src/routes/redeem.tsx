@@ -84,7 +84,7 @@ function Redeem() {
             ["Value", `$${o.value.toFixed(2)}`],
             ["Cost", o.points ? `${o.points.toLocaleString()} pts` : "Free card offer"],
             ["Minimum spend", o.minSpend ? `$${o.minSpend}` : "None"],
-            ["Expires", o.expires],
+            [o.renews ? "Renews" : "Expires", o.expires],
             ["Terms", "One per customer, eligible purchase only"],
           ].map(([k, v]) => (
             <div key={k} className="flex justify-between gap-4"><span className="text-muted-foreground">{k}</span><span className="text-right font-semibold">{v}</span></div>
