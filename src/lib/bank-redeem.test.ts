@@ -17,3 +17,15 @@ describe("Bank points on picked offers", () => {
     expect(bankSelectionEnabled(true, true, false)).toBe(false);
   });
 });
+
+import { offerRewardValue as orv, bankPointsForOffer as bpo } from "./bank";
+import { getOffer as go, examplePartnerIds as ep } from "./rewards";
+describe("bank-funded card offers", () => {
+  it("Netflix and Spotify use 700 and 600 Bank points and are not connected apps", () => {
+    expect(bpo(go("netflix"), 2340)).toBe(700);
+    expect(bpo(go("spotify"), 2340)).toBe(600);
+    expect(orv(go("netflix"))).toBe(0);
+    expect(ep).not.toContain("netflix");
+    expect(ep).not.toContain("spotify");
+  });
+});

@@ -1,3 +1,4 @@
+import { CARD_OFFER_LABEL } from "@/lib/rewards";
 import { APP_NAME_TITLE } from "@/lib/app-config";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";

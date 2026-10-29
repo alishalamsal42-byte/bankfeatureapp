@@ -34,10 +34,10 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeScreen() {
-  const { bestNow, banner, connectedApps, prefs, bank, purchases, now } = useRecommendationState();
+  const { bestNow, banner, connectedApps, availableRewards, prefs, bank, purchases, now } = useRecommendationState();
   const totalValue = connectionTotal(connectedApps) + bank.dollars;
   const totalPoints = bank.points + connectedApps.reduce((sum, offer) => sum + offer.points, 0);
-  const expiring = connectedApps.filter(o => !isLocked(o) && o.expiresInDays !== undefined && Number.isFinite(o.expiresInDays) && o.expiresInDays <= 3).sort((a, b) => (a.expiresInDays ?? 0) - (b.expiresInDays ?? 0)).slice(0, 5);
+  const expiring = [...connectedApps, ...availableRewards.filter(o => o.bankFunded)].filter(o => !isLocked(o) && o.expiresInDays !== undefined && Number.isFinite(o.expiresInDays) && o.expiresInDays <= 3).sort((a, b) => (a.expiresInDays ?? 0) - (b.expiresInDays ?? 0)).slice(0, 5);
   const nearest = closestProgress(connectedApps);
   const [handoff, setHandoff] = useState<string | null>(null);
   const top = bestNow;
@@ -118,9 +118,9 @@ function HomeScreen() {
       {expiring.length > 0 && <>
         <p className="mt-6 text-sm font-semibold text-muted-foreground">Use it or lose it</p>
         <section className="mt-2 divide-y rounded-3xl border bg-card px-4">
-          {expiring.map(o => <Link key={o.id} to="/redeem" search={{ id: o.id }} className="flex items-center gap-3 py-3">
+          {expiring.map(o => <Link key={o.id} to="/redeem" search={o.bankFunded ? { id: o.id, useBank: true } : { id: o.id }} className="flex items-center gap-3 py-3">
             <BrandLogo name={o.merchant} />
-            <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{o.title}</p><p className="text-xs text-muted-foreground">{o.merchant} · {expiryLabel(o)}</p></div>
+            <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{o.title}</p><p className="text-xs text-muted-foreground">{o.merchant}{o.bankFunded ? " · Card offer" : ""} · {expiryLabel(o)}</p></div>
             <span className="text-sm font-bold">${o.value.toFixed(2)}</span>
           </Link>)}
         </section>

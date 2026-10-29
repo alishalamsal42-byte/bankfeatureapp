@@ -7,10 +7,10 @@ import { CODE_VALID_MS, formatCountdown, isCardOffer, minSpendShortfall, redempt
 import { BANK } from "@/lib/bank";
 import { Input } from "@/components/ui/input";
 import type { Offer } from "@/lib/rewards";
-import { bankSelectionEnabled, paymentSplit, typicalPurchase } from "@/lib/bank";
+import { bankPointsForOffer, bankSelectionEnabled, offerRewardValue, paymentSplit, typicalPurchase } from "@/lib/bank";
 import { Switch } from "@/components/ui/switch";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
-import { getOffer, user } from "@/lib/rewards";
+import { CARD_OFFER_LABEL, getOffer, user } from "@/lib/rewards";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";

@@ -1,10 +1,11 @@
+import { CARD_OFFER_LABEL, expiryLabel } from "@/lib/rewards";
 import { APP_NAME_TITLE } from "@/lib/app-config";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
-import { bankDollars, bankOfferOrder, paymentSplit, typicalPurchase, BANK } from "@/lib/bank";
+import { bankDollars, bankOfferOrder, offerRewardValue, paymentSplit, typicalPurchase, BANK } from "@/lib/bank";
 
 export const Route = createFileRoute("/bank-rewards")({
   head: () => ({
@@ -45,7 +46,7 @@ function BankRewards() {
       <div className="divide-y border-y">
         {offers.map(offer => {
           const total = typicalPurchase(offer);
-          const split = paymentSplit(total, offer.value, bank.points, true);
+          const split = paymentSplit(total, offerRewardValue(offer), bank.points, true);
           const charged = split.charged === 0 ? "$0" : `$${split.charged.toFixed(2)}`;
           return (
             <article key={offer.id} aria-label={`${offer.merchant} offer`} className="py-4">
@@ -55,7 +56,8 @@ function BankRewards() {
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold">{offer.merchant}</p>
                   <p className="text-sm text-muted-foreground">{offer.title}</p>
-                  <p className="mt-1 text-xs font-semibold text-points">Typical ${total.toFixed(2)} order: ${split.rewardCovered.toFixed(2)} reward + {split.bankPts.toLocaleString()} {BANK.points} = {charged} out of pocket</p>
+                  {offer.bankFunded ? <p className="mt-1 text-xs font-semibold text-points">${total.toFixed(2)} bill: {split.bankPts.toLocaleString()} {BANK.points} = {charged} out of pocket</p> : <p className="mt-1 text-xs font-semibold text-points">Typical ${total.toFixed(2)} order: ${split.rewardCovered.toFixed(2)} reward + {split.bankPts.toLocaleString()} {BANK.points} = {charged} out of pocket</p>}
+                  {offer.bankFunded && <p className="text-xs text-muted-foreground">{CARD_OFFER_LABEL} · {expiryLabel(offer)}</p>}
                 </div>
                 <Button asChild size="sm" className="shrink-0"><Link to="/redeem" search={{ id: offer.id, useBank: true }}>Use points</Link></Button>
               </div>

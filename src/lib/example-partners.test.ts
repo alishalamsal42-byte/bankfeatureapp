@@ -16,8 +16,8 @@ describe("example grocery and online partners", () => {
     expect(getOffer("publix")).toMatchObject({ title: "$5 off $40+", value: 5, minSpend: 40, expiresInDays: 6, distanceMiles: 0.8, openHours: { open: 7, close: 22 }, modelCategory: "grocery" });
     expect(getOffer("target")).toMatchObject({ title: "$4 off $30+ groceries", points: 400, value: 4, minSpend: 30, expiresInDays: 9, distanceMiles: 1.6, openHours: { open: 8, close: 22 } });
     expect(getOffer("walmart")).toMatchObject({ points: 300, value: 3, expiresInDays: 14, distanceMiles: 2.4, openHours: { open: 6, close: 23 } });
-    expect(getOffer("netflix")).toMatchObject({ points: 700, value: 7, expiresInDays: 3, online: true, modelCategory: "online", renews: true });
-    expect(getOffer("spotify")).toMatchObject({ points: 600, value: 6, expiresInDays: 5, online: true, modelCategory: "online", renews: true });
+    expect(getOffer("netflix")).toMatchObject({ points: 0, bankFunded: true, value: 7, title: "$7 credit on your next bill", expiresInDays: 3, online: true, modelCategory: "online", renews: true });
+    expect(getOffer("spotify")).toMatchObject({ points: 0, bankFunded: true, value: 6, title: "$6 credit on Premium Student", expiresInDays: 5, online: true, modelCategory: "online", renews: true });
   });
   it("every Grocery and Online reward uses its trained model", () => {
     for (const o of offers) {

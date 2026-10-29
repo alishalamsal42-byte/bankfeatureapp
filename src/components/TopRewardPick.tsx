@@ -5,7 +5,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Progress } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { matchLabel, type scoreReward } from "@/lib/model";
-import type { Offer } from "@/lib/rewards";
+import { CARD_OFFER_LABEL, type Offer } from "@/lib/rewards";
 import { pickReason } from "@/lib/pick-context";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
 import { bankCoversRest, typicalPurchase } from "@/lib/bank";

@@ -70,7 +70,7 @@ function useStateEngine() {
   const expiredRewards = useMemo(() => live([...offers, ...appCatalog]).filter(o => o.expired && connectedIds.includes(o.id) && !redeemedIds.includes(o.id) && !isLocked(o)).map(o => ({ ...o, expiresAt: ("expiresAt" in o ? o.expiresAt : undefined) ?? nowMs })), [demoStart, nowMs, connectedIds, redeemedIds]);
   /** Redeemed rewards spend their balance: 0 pts / $0 everywhere; expired rewards leave Connect. */
   const connectedApps = useMemo(() => live([...offers, ...appCatalog]).filter(o => connectedIds.includes(o.id) && !o.expired).map(o => redeemedIds.includes(o.id) ? (({ expiresInDays: _e, ...rest }) => ({ ...rest, points: 0, value: 0 }))(o) as typeof o : o), [connectedIds, redeemedIds, demoStart, nowMs]);
-  const availableRewards = useMemo(() => live([ ...(controls ? demoOffers : offers).filter(o => !originalIds.includes(o.id) || connectedIds.includes(o.id)), ...appCatalog.filter(o => connectedIds.includes(o.id)) ]).filter(o => !o.expired && !isLocked(o) && !redeemedIds.includes(o.id)), [controls, connectedIds, originalIds, redeemedIds, demoStart, nowMs]);
+  const availableRewards = useMemo(() => live([ ...(controls ? demoOffers : offers).filter(o => !originalIds.includes(o.id) || connectedIds.includes(o.id)), ...appCatalog.filter(o => connectedIds.includes(o.id)) ]).filter(o => !o.expired && !isLocked(o) && !redeemedIds.includes(o.id) && (!o.bankFunded || bankConnected)), [bankConnected, controls, connectedIds, originalIds, redeemedIds, demoStart, nowMs]);
   useEffect(() => {
     setNow(new Date());
     try {
