@@ -55,7 +55,7 @@ function BankRewards() {
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold">{offer.merchant}</p>
                   <p className="text-sm text-muted-foreground">{offer.title}</p>
-                  <p className="mt-1 text-xs font-semibold text-points">Typical ${total.toFixed(2)} order: ${split.rewardCovered.toFixed(2)} reward + {split.bankPts.toLocaleString()} {BANK.points} = ${split.charged.toFixed(2)} out of pocket</p>
+                  <p className="mt-1 text-xs font-semibold text-points">Typical ${total.toFixed(2)} order: ${split.rewardCovered.toFixed(2)} reward + {split.bankPts.toLocaleString()} {BANK.points} = {charged} out of pocket</p>
                 </div>
                 <Button asChild size="sm" className="shrink-0"><Link to="/redeem" search={{ id: offer.id, useBank: true }}>Use points</Link></Button>
               </div>
