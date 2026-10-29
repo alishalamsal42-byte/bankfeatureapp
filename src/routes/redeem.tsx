@@ -16,7 +16,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/redeem")({
-  validateSearch: (s: Record<string, unknown>): { id?: string; useBank?: boolean } => ({ id: typeof s["id"] === "string" ? s["id"] : undefined, useBank: s["useBank"] === true || s["useBank"] === "true" ? true : undefined }),
+  validateSearch: (s: Record<string, unknown>): { id?: string | undefined; useBank?: boolean | undefined } => ({ id: typeof s["id"] === "string" ? s["id"] : undefined, useBank: s["useBank"] === true || s["useBank"] === "true" ? true : undefined }),
   head: () => ({
     meta: [
       { title: `Redeem — ${APP_NAME_TITLE}` },
