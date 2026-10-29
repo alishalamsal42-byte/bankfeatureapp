@@ -37,7 +37,7 @@ function HomeScreen() {
   const { bestNow, banner, connectedApps, prefs, bank, purchases, now } = useRecommendationState();
   const totalValue = connectionTotal(connectedApps) + bank.dollars;
   const totalPoints = bank.points + connectedApps.reduce((sum, offer) => sum + offer.points, 0);
-  const expiring = connectedApps.filter(o => !isLocked(o) && o.expiresInDays !== undefined && Number.isFinite(o.expiresInDays) && o.expiresInDays <= 3).sort((a, b) => (a.expiresInDays ?? 0) - (b.expiresInDays ?? 0)).slice(0, 3);
+  const expiring = connectedApps.filter(o => !isLocked(o) && o.expiresInDays !== undefined && Number.isFinite(o.expiresInDays) && o.expiresInDays <= 3).sort((a, b) => (a.expiresInDays ?? 0) - (b.expiresInDays ?? 0)).slice(0, 5);
   const nearest = closestProgress(connectedApps);
   const [handoff, setHandoff] = useState<string | null>(null);
   const top = bestNow;
