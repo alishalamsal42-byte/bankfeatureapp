@@ -25,7 +25,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <span>8:15</span>
           <span className="flex items-center gap-1"><Signal className="h-4 w-4" /><Wifi className="h-4 w-4" /><BatteryFull className="h-5 w-5" /></span>
         </div>
-        <main className="no-scrollbar flex-1 overflow-y-auto px-5 pb-6">{children}</main>
+        <main className="no-scrollbar flex-1 overflow-y-auto px-5 pb-20">{children}</main>
         <AskButton />
         <nav className="grid shrink-0 grid-cols-5 border-t bg-card px-2 pt-2 pb-5">
           {tabs.map((t) => (
