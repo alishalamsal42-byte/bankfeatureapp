@@ -10,33 +10,154 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ActivityRouteImport } from './routes/activity'
+import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as BankRewardsRouteImport } from './routes/bank-rewards'
+import { Route as ForYouRouteImport } from './routes/for-you'
+import { Route as ImpactRouteImport } from './routes/impact'
+import { Route as PreferencesRouteImport } from './routes/preferences'
+import { Route as RedeemRouteImport } from './routes/redeem'
+import { Route as SavingsRouteImport } from './routes/savings'
+import { Route as SmartMatchRouteImport } from './routes/smart-match'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ActivityRoute = ActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BankRewardsRoute = BankRewardsRouteImport.update({
+  id: '/bank-rewards',
+  path: '/bank-rewards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForYouRoute = ForYouRouteImport.update({
+  id: '/for-you',
+  path: '/for-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImpactRoute = ImpactRouteImport.update({
+  id: '/impact',
+  path: '/impact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreferencesRoute = PreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RedeemRoute = RedeemRouteImport.update({
+  id: '/redeem',
+  path: '/redeem',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavingsRoute = SavingsRouteImport.update({
+  id: '/savings',
+  path: '/savings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SmartMatchRoute = SmartMatchRouteImport.update({
+  id: '/smart-match',
+  path: '/smart-match',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
+  '/assistant': typeof AssistantRoute
+  '/bank-rewards': typeof BankRewardsRoute
+  '/for-you': typeof ForYouRoute
+  '/impact': typeof ImpactRoute
+  '/preferences': typeof PreferencesRoute
+  '/redeem': typeof RedeemRoute
+  '/savings': typeof SavingsRoute
+  '/smart-match': typeof SmartMatchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
+  '/assistant': typeof AssistantRoute
+  '/bank-rewards': typeof BankRewardsRoute
+  '/for-you': typeof ForYouRoute
+  '/impact': typeof ImpactRoute
+  '/preferences': typeof PreferencesRoute
+  '/redeem': typeof RedeemRoute
+  '/savings': typeof SavingsRoute
+  '/smart-match': typeof SmartMatchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
+  '/assistant': typeof AssistantRoute
+  '/bank-rewards': typeof BankRewardsRoute
+  '/for-you': typeof ForYouRoute
+  '/impact': typeof ImpactRoute
+  '/preferences': typeof PreferencesRoute
+  '/redeem': typeof RedeemRoute
+  '/savings': typeof SavingsRoute
+  '/smart-match': typeof SmartMatchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/activity'
+    | '/assistant'
+    | '/bank-rewards'
+    | '/for-you'
+    | '/impact'
+    | '/preferences'
+    | '/redeem'
+    | '/savings'
+    | '/smart-match'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/activity'
+    | '/assistant'
+    | '/bank-rewards'
+    | '/for-you'
+    | '/impact'
+    | '/preferences'
+    | '/redeem'
+    | '/savings'
+    | '/smart-match'
+  id:
+    | '__root__'
+    | '/'
+    | '/activity'
+    | '/assistant'
+    | '/bank-rewards'
+    | '/for-you'
+    | '/impact'
+    | '/preferences'
+    | '/redeem'
+    | '/savings'
+    | '/smart-match'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ActivityRoute: typeof ActivityRoute
+  AssistantRoute: typeof AssistantRoute
+  BankRewardsRoute: typeof BankRewardsRoute
+  ForYouRoute: typeof ForYouRoute
+  ImpactRoute: typeof ImpactRoute
+  PreferencesRoute: typeof PreferencesRoute
+  RedeemRoute: typeof RedeemRoute
+  SavingsRoute: typeof SavingsRoute
+  SmartMatchRoute: typeof SmartMatchRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +169,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/activity': {
+      id: '/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof ActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bank-rewards': {
+      id: '/bank-rewards'
+      path: '/bank-rewards'
+      fullPath: '/bank-rewards'
+      preLoaderRoute: typeof BankRewardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-you': {
+      id: '/for-you'
+      path: '/for-you'
+      fullPath: '/for-you'
+      preLoaderRoute: typeof ForYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/impact': {
+      id: '/impact'
+      path: '/impact'
+      fullPath: '/impact'
+      preLoaderRoute: typeof ImpactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preferences': {
+      id: '/preferences'
+      path: '/preferences'
+      fullPath: '/preferences'
+      preLoaderRoute: typeof PreferencesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/redeem': {
+      id: '/redeem'
+      path: '/redeem'
+      fullPath: '/redeem'
+      preLoaderRoute: typeof RedeemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/savings': {
+      id: '/savings'
+      path: '/savings'
+      fullPath: '/savings'
+      preLoaderRoute: typeof SavingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/smart-match': {
+      id: '/smart-match'
+      path: '/smart-match'
+      fullPath: '/smart-match'
+      preLoaderRoute: typeof SmartMatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ActivityRoute: ActivityRoute,
+  AssistantRoute: AssistantRoute,
+  BankRewardsRoute: BankRewardsRoute,
+  ForYouRoute: ForYouRoute,
+  ImpactRoute: ImpactRoute,
+  PreferencesRoute: PreferencesRoute,
+  RedeemRoute: RedeemRoute,
+  SavingsRoute: SavingsRoute,
+  SmartMatchRoute: SmartMatchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
