@@ -33,7 +33,7 @@ const consents = [
   { k: "notify", t: "Smart notifications", d: "" },
   { k: "quiet", t: "Quiet hours", d: "No notifications from 10 PM to 8 AM" },
   { k: "expiry", t: "Expiry alerts", d: "Remind me before a reward expires" },
-  { k: "bankAuto", t: "Use bank points automatically", d: `Cover the rest of a purchase with your ${BANK.points}` },
+  { k: "bankAuto", t: "Use credit points automatically", d: `Cover the rest of a purchase with your ${BANK.points}` },
 ] as const;
 
 function Switch({ on, onClick, label }: { on: boolean; onClick: () => void; label: string }) {
