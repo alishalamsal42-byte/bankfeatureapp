@@ -66,7 +66,7 @@ function SmartMatch() {
             <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{BANK.card}</span>
             <span className="block font-bold">{BANK.points}</span>
             <span className="block text-sm font-bold text-success">{bank.points.toLocaleString()} pts ≈ ${bank.dollars.toFixed(2)}</span>
-            <span className="block text-xs text-muted-foreground">Use anywhere with your card</span>
+            <span className="block text-xs text-muted-foreground">Use on your offers</span>
           </span>
           <span className="text-[10px] font-bold text-success">Connected</span>
         </Button>

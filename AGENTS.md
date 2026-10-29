@@ -20,3 +20,4 @@
 - Keep mock merchant connection IDs in the shared root provider for navigation-only demo state; catalog data drives Connect, recommendations and payment lookup without real account authentication or credentials.
 - Keep preference rules (interest ordering, history-off sorting, quiet hours, expiry alerts, banner gating) in the pure tested preferences module; a browser-local preferences store restored after hydration feeds the root recommendation provider so Home, For You and banners react immediately.
 - Keep bank card points (Chase example partner) in their own pure tested bank module and root-provider state, never in merchant offers, so they never get a match score, never enter expiry/progress lists, and payment splits deduct from one shared balance.
+- Bank points offer lists reuse the shared engine ordering and pure payment estimate; an explicit payment search flag enables Bank points independent of auto-use preferences, so displayed point costs match checkout.

@@ -7,7 +7,7 @@ import { CODE_VALID_MS, formatCountdown, isCardOffer, minSpendShortfall, redempt
 import { BANK } from "@/lib/bank";
 import { Input } from "@/components/ui/input";
 import type { Offer } from "@/lib/rewards";
-import { paymentSplit, typicalPurchase } from "@/lib/bank";
+import { bankSelectionEnabled, paymentSplit, typicalPurchase } from "@/lib/bank";
 import { Switch } from "@/components/ui/switch";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
 import { getOffer, user } from "@/lib/rewards";
@@ -16,7 +16,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/redeem")({
-  validateSearch: (s: Record<string, unknown>): { id?: string | undefined } => ({ id: typeof s["id"] === "string" ? (s["id"] as string) : undefined }),
+  validateSearch: (s: Record<string, unknown>): { id?: string | undefined; useBank?: boolean | undefined } => ({ id: typeof s["id"] === "string" ? s["id"] : undefined, useBank: s["useBank"] === true || s["useBank"] === "true" ? true : undefined }),
   head: () => ({
     meta: [
       { title: `Redeem — ${APP_NAME_TITLE}` },
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/redeem")({
 const steps = ["Review", "Confirm", "Use"];
 
 function Redeem() {
-  const { id } = Route.useSearch();
+  const { id, useBank: requestedBank } = Route.useSearch();
   const { redeemReward, returnReward, connectedApps, bank, prefs, payWithBank } = useRewardEngine();
   const isBank = id === BANK.id;
   const o = isBank ? bank.offer : getOffer(id ?? "coffee");
@@ -47,7 +47,7 @@ function Redeem() {
   const [useBank, setUseBank] = useState(true);
   const [paid, setPaid] = useState<ReturnType<typeof paymentSplit> | null>(null);
   useEffect(() => { setStep(0); setPaid(null); }, [o.id]);
-  useEffect(() => { setUseBank(prefs.bankAuto && bank.connected); }, [prefs.bankAuto, bank.connected, o.id]);
+  useEffect(() => { setUseBank(bankSelectionEnabled(requestedBank === true, prefs.bankAuto, bank.connected)); }, [requestedBank, prefs.bankAuto, bank.connected, o.id]);
   const split = paymentSplit(askTotal ? amount : typicalPurchase(o), isBank || short > 0 ? 0 : o.value, bank.points, isBank || (useBank && bank.connected));
   const confirm = () => { setPaid(split); if (isBank) payWithBank(split.total); else redeemReward(o, split.bankPts); };
   return (
@@ -190,7 +190,7 @@ function TapToPay({ split, chase, offerNote = false, summary = [] }: { split: Re
           <div className="flex justify-between"><span className="text-muted-foreground">Charged to card</span><span className="font-semibold">${split.charged.toFixed(2)}</span></div>
         </div>
         {offerNote && <p className="mt-3 text-xs font-semibold">Offer applied automatically when you pay with your card.</p>}
-        {chase && <p className="mt-3 text-xs font-semibold text-success">{BANK.points} applied instantly. No 3–4 day wait.</p>}
+        {chase && <p className="mt-3 text-xs font-semibold text-success">{BANK.points} applied to this purchase.</p>}
         {summary.length > 0 && <div className="mt-4 w-full border-t pt-4 text-sm">{summary.map((line, k) => <p key={line} className={k === 0 ? "font-semibold" : "mt-1 text-muted-foreground"}>{line}</p>)}</div>}
       </>}
     </div>

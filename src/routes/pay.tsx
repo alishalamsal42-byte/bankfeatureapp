@@ -1,13 +1,11 @@
 import { APP_NAME_TITLE } from "@/lib/app-config";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeftRight, Camera, ChevronRight, CreditCard, Receipt, Send, Zap } from "lucide-react";
+import { ArrowLeftRight, Camera, ChevronRight, Receipt, Send } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRewardEngine } from "@/hooks/recommendation-demo";
-import { BANK } from "@/lib/bank";
 import { accounts } from "@/lib/banking";
 
 export const Route = createFileRoute("/pay")({
@@ -28,7 +26,6 @@ const contacts = ["Alex", "Jordan", "Priya"] as const;
 const bills = [{ name: "Phone bill", amount: 45, due: "Due Nov 3" }, { name: "Music streaming (student)", amount: 5.99, due: "Due Nov 8" }] as const;
 
 function Pay() {
-  const { bank } = useRewardEngine();
   const [to, setTo] = useState<(typeof contacts)[number]>("Alex");
   const [amount, setAmount] = useState(20);
   const [transfer, setTransfer] = useState(50);
@@ -36,14 +33,7 @@ function Pay() {
     <AppShell>
       <ScreenHeader title="Pay & transfer" subtitle={`${accounts.checking.name} (…${accounts.checking.last4})`} />
 
-      <section aria-label="Pay with points" className="rounded-3xl bg-[#0b4ea2] p-5 text-white">
-        <p className="flex items-center gap-2 text-sm font-semibold"><Zap className="h-4 w-4" />Pay with points, instantly</p>
-        <p className="mt-1 text-sm opacity-85">You have {bank.points.toLocaleString()} {BANK.points} (${bank.dollars.toFixed(2)}). Use them at checkout or cash them out right now. No 3–4 day wait.</p>
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <Button asChild variant="secondary" className="rounded-full"><Link to="/redeem" search={{ id: BANK.id }}><CreditCard />Tap to pay</Link></Button>
-          <Button asChild variant="secondary" className="rounded-full"><Link to="/bank-rewards">Cash out points</Link></Button>
-        </div>
-      </section>
+      <Button asChild variant="outline" className="h-auto w-full justify-start rounded-3xl bg-card p-4 text-left whitespace-normal"><Link to="/bank-rewards">Use your Bank points on today’s offers →</Link></Button>
 
       <h2 className="mt-6 mb-2 flex items-center gap-2 text-sm font-bold"><Send className="h-4 w-4" />Send money</h2>
       <section className="rounded-3xl border bg-card p-4">
