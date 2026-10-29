@@ -22,6 +22,10 @@ import dunkinAsset from '@/assets/brands/dunkin.svg.asset.json';
 import wingstopAsset from '@/assets/brands/wingstop.svg.asset.json';
 import ultaAsset from '@/assets/brands/ulta.svg.asset.json';
 import sephoraAsset from '@/assets/brands/sephora.svg.asset.json';
+import publixAsset from '@/assets/brands/publix.svg.asset.json';
+import walmartAsset from '@/assets/brands/walmart.svg.asset.json';
+import netflixAsset from '@/assets/brands/netflix.svg.asset.json';
+import spotifyAsset from '@/assets/brands/spotify.svg.asset.json';
 
 export type Offer = ScorableReward & {
   id: string;
@@ -42,7 +46,16 @@ export type Offer = ScorableReward & {
   validHours?: [number, number];
   /** Merchant opening hours; absent = always open (online or not tracked). */
   openHours?: OpenHours;
+  /** Subscription credit: show "Renews" instead of "Expires". */
+  renews?: boolean;
 };
+
+/** "Renews in 3 days" for subscriptions, "Expires in 3 days" otherwise. */
+export function expiryLabel(o: Pick<Offer, "renews" | "expiresInDays">) {
+  const d = o.expiresInDays;
+  const verb = o.renews ? "Renews" : "Expires";
+  return d === 0 ? `${verb} today` : d === 1 ? `${verb} tomorrow` : `${verb} in ${d} days`;
+}
 
 export const user = { name: "Sarah", school: "UNF", points: 8430, pointValue: 0.01 };
 
@@ -82,6 +95,10 @@ export const partnerLogo: Record<string, string> = {
   Wingstop: wingstopAsset.url,
   Ulta: ultaAsset.url,
   Sephora: sephoraAsset.url,
+  Publix: publixAsset.url,
+  Walmart: walmartAsset.url,
+  Netflix: netflixAsset.url,
+  Spotify: spotifyAsset.url,
   Starbucks: starbucksLogo,
   "Chick-fil-A": chickfilaLogo,
   "Taco Bell": tacobellLogo,
@@ -111,6 +128,10 @@ const baseOffers = [
   { id: "bb", merchant: "Best Buy", emoji: "🎧", category: "Shopping", title: "$20 off $100+", points: 2000, value: 20, minSpend: 100, expires: "6 days", reason: "Requires spending $88 more than you usually do" },
   { id: "ride", merchant: "Uber", emoji: "🚗", category: "Travel", title: "$3 off a ride", points: 300, value: 3, minSpend: 0, expires: "7 days", reason: "A ride home after class" },
   { id: "lyft", merchant: "Lyft", emoji: "🚗", category: "Travel", title: "$4 off a ride", points: 400, value: 4, minSpend: 0, expires: "7 days", reason: "A ride near campus" },
+  { id: "publix", merchant: "Publix", emoji: "", category: "Grocery", title: "$5 off $40+", points: 0, value: 5, minSpend: 40, expires: "6 days", reason: "Your usual grocery run" },
+  { id: "walmart", merchant: "Walmart", emoji: "", category: "Grocery", title: "$3 Walmart Cash", points: 300, value: 3, minSpend: 0, expires: "14 days", reason: "Groceries near Town Center" },
+  { id: "netflix", merchant: "Netflix", emoji: "", category: "Online", title: "$7 off your next month", points: 700, value: 7, minSpend: 0, expires: "3 days", renews: true, reason: "Your plan renews soon" },
+  { id: "spotify", merchant: "Spotify", emoji: "", category: "Online", title: "1 month of Premium Student", points: 600, value: 6, minSpend: 0, expires: "5 days", renews: true, reason: "Your plan renews soon" },
   { id: "movie", merchant: "AMC Cinema", emoji: "🎬", category: "Fun", title: "1 ticket", points: 1800, value: 14, minSpend: 0, expires: "30 days", reason: "You spent 15% less on dining this week" },
 ] satisfies Omit<Offer, "modelCategory" | "historyCategory" | "distanceMiles" | "online">[];
 
@@ -121,14 +142,20 @@ export const openingHours: Record<string, OpenHours> = {
   Chipotle: { open: 10.75, close: 22 },
   "Taco Bell": { open: 7, close: 25 },
   "Burger King": { open: 6, close: 25 },
+  Publix: { open: 7, close: 22 },
+  Target: { open: 8, close: 22 },
+  Walmart: { open: 6, close: 23 },
 };
 
+/** Example grocery and online partners, connected by default alongside the main brands. */
+export const examplePartnerIds = ["publix", "target", "walmart", "netflix", "spotify"] as const;
+
 export const offers: Offer[] = baseOffers.map(o => {
-  const modelCategory = o.category === "Coffee" ? "coffee" : o.category === "Food" ? "food" : o.merchant === "Amazon" ? "online" : o.merchant === "Uber" || o.merchant === "Lyft" ? "ride" : undefined;
+  const modelCategory = o.category === "Coffee" ? "coffee" : o.category === "Food" ? "food" : o.category === "Grocery" ? "grocery" : o.category === "Online" || o.merchant === "Amazon" ? "online" : o.merchant === "Uber" || o.merchant === "Lyft" ? "ride" : undefined;
   const historyCategory = modelCategory ?? (o.category === "Travel" ? "travel" : o.category === "Fun" ? "fun" : "shopping");
-  const distances: Record<string, number> = { coffee: 0.075, cfa: 0.4, lunch: 0.2, mcd: 0.7, bk: 1.2, taco: 0.56, ride: 0.05, lyft: 0.08, nike: 1.1, tjx: 0.8, bb: 2, movie: 1.5 };
+  const distances: Record<string, number> = { coffee: 0.075, cfa: 0.4, lunch: 0.2, mcd: 0.7, bk: 1.2, taco: 0.56, ride: 0.05, lyft: 0.08, nike: 1.1, tjx: 0.8, bb: 2, movie: 1.5, publix: 0.8, walmart: 2.4 };
   const expiresInDays = o.expires === "Today" ? 0 : o.expires === "Tomorrow" ? 1 : Number.parseInt(o.expires, 10);
-  return { ...o, ...(openingHours[o.merchant] ? { openHours: openingHours[o.merchant] } : {}), ...(o.id === "coffee" ? { mapPoint: mockPlaces.Library } : {}), expiresInDays, modelCategory, historyCategory, distanceMiles: distances[o.id] ?? 0, online: o.merchant === "Amazon" };
+  return { ...o, ...(openingHours[o.merchant] ? { openHours: openingHours[o.merchant] } : {}), ...(o.id === "coffee" ? { mapPoint: mockPlaces.Library } : {}), expiresInDays, modelCategory, historyCategory, distanceMiles: distances[o.id] ?? 0, online: o.merchant === "Amazon" || o.category === "Online" };
 });
 
 const fixtureOffers: Offer[] = mockRewards.map(reward => ({
@@ -140,11 +167,14 @@ const fixtureOffers: Offer[] = mockRewards.map(reward => ({
 }));
 
 export const demoOffers: Offer[] = [
-  ...offers.filter(reward => reward.id === "coffee" || reward.modelCategory === "ride" || reward.merchant === "Amazon" || !reward.modelCategory),
+  ...offers.filter(reward => reward.id === "coffee" || reward.modelCategory === "ride" || reward.modelCategory === "online" || !reward.modelCategory),
+  // Grocery stores sit near the Town Center demo location (Target's demo point is set in the Connect catalog).
+  ...offers.filter(reward => reward.id === "publix").map(reward => ({ ...reward, mapPoint: [2.00, 0.50] as const })),
+  ...offers.filter(reward => reward.id === "walmart").map(reward => ({ ...reward, mapPoint: [2.30, 0.60] as const })),
   // Taco Bell sits next to the Residence halls on the demo map (as in the Python scenarios), for late-night food.
   ...offers.filter(reward => reward.id === "taco").map(reward => ({ ...reward, mapPoint: [0.48, 0.70] as const })),
   // Amazon (above) is the demo's online reward, so the generic "Online store" fixture is left out.
-  ...fixtureOffers.filter(reward => reward.id !== "campus-brew" && reward.id !== "online-store"),
+  ...fixtureOffers.filter(reward => reward.id !== "campus-brew" && reward.id !== "online-store" && reward.id !== "fresh-basket"),
 ];
 
 export const getOffer = (id: string) => [...offers, ...fixtureOffers, ...appCatalog].find((o) => o.id === id) ?? offers[0] ?? (() => { throw new Error("No rewards available"); })();
