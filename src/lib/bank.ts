@@ -12,7 +12,7 @@ export function typicalPurchase(o: { category: string; minSpend: number; value: 
   return Math.max(base, o.value);
 }
 
-/** Split a purchase: merchant reward first, then bank points (whole points), then the card. */
+/** Split a purchase: merchant reward first, then credit points (whole points), then the card. */
 export function paymentSplit(total: number, rewardValue: number, bankPoints: number, useBank: boolean) {
   const rewardCovered = Math.min(rewardValue, total);
   const rest = Math.round((total - rewardCovered) * 100) / 100;
@@ -21,11 +21,11 @@ export function paymentSplit(total: number, rewardValue: number, bankPoints: num
   return { total, rewardCovered, bankPts, bankCovered, charged: Math.round((rest - bankCovered) * 100) / 100 };
 }
 
-/** True when bank points can cover everything the reward doesn't. */
+/** True when credit points can cover everything the reward doesn't. */
 export const bankCoversRest = (total: number, rewardValue: number, bankPoints: number) => paymentSplit(total, rewardValue, bankPoints, true).charged === 0;
 
 /** The offer list and payment review use the same purchase estimate and split. */
-/** Merchant reward applied before Bank points; bank-funded card offers have none (points pay the whole credit). */
+/** Merchant reward applied before Credit points; bank-funded card offers have none (points pay the whole credit). */
 export const offerRewardValue = (o: { value: number; bankFunded?: boolean | undefined }) => o.bankFunded ? 0 : o.value;
 
 export function bankPointsForOffer(offer: Parameters<typeof typicalPurchase>[0], balance: number) {

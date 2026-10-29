@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { bankOfferOrder, bankPointsForOffer, bankSelectionEnabled } from "./bank";
 
-describe("Bank points on picked offers", () => {
+describe("Credit points on picked offers", () => {
   it("shows the current AI pick first without duplicating it or changing the remaining ranking", () => {
     const a = { id: "coffee" }, b = { id: "food" }, c = { id: "shopping" };
     expect(bankOfferOrder(b, [a, b], [c])).toEqual([b, a, c]);

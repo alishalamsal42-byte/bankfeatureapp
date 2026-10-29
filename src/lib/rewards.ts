@@ -48,7 +48,7 @@ export type Offer = ScorableReward & {
   openHours?: OpenHours;
   /** Subscription credit: show "Renews" instead of "Expires". */
   renews?: boolean;
-  /** Bank credit card offer: no merchant balance, the bill is paid with Bank points. */
+  /** Bank credit card offer: no merchant balance, the bill is paid with Credit points. */
   bankFunded?: boolean;
 };
 
@@ -59,7 +59,7 @@ export function expiryLabel(o: Pick<Offer, "renews" | "expiresInDays">) {
   return d === 0 ? `${verb} today` : d === 1 ? `${verb} tomorrow` : `${verb} in ${d} days`;
 }
 
-/** Cost label: "Use 700 Bank points · $7.00", "750 pts · $5.25", or "$1.80 off" for no-points deals. */
+/** Cost label: "Use 700 Credit points · $7.00", "750 pts · $5.25", or "$1.80 off" for no-points deals. */
 export function offerCostLabel(o: Pick<Offer, "points" | "value" | "minSpend" | "bankFunded">) {
   const v = `$${o.value.toFixed(2)}`;
   if (o.bankFunded) return `Use ${Math.round(Math.max(o.value, o.minSpend) * 100).toLocaleString()} Credit points · ${v}`;
