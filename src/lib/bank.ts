@@ -23,18 +23,20 @@ export function paymentSplit(total: number, rewardValue: number, bankPoints: num
 /** True when bank points can cover everything the reward doesn't. */
 export const bankCoversRest = (total: number, rewardValue: number, bankPoints: number) => paymentSplit(total, rewardValue, bankPoints, true).charged === 0;
 
-/** Ways to use bank points on the bank Rewards screen. Cash back is instant through FIS real-time payments (simulated). */
-export type BankRedeemKind = "checkout" | "cash" | "gift";
-export const GIFT_CARD_MERCHANTS = ["Starbucks", "Amazon", "Chick-fil-A"] as const;
-export const CASH_BACK_AMOUNTS = [5, 10] as const;
-export const GIFT_CARD_AMOUNTS = [5, 10, 20] as const;
-/** Points needed for a dollar amount (1 point = 1 cent). */
-export const pointsFor = (dollars: number) => Math.round(dollars / BANK.pointValue);
-export const canAfford = (points: number, dollars: number) => dollars > 0 && pointsFor(dollars) <= points;
-/** "Use all" cash back: every whole dollar the balance covers. */
-export const allCashBack = (points: number) => Math.floor(bankDollars(points));
-/** Demo gift card code, stable for the same merchant and time. */
-export const giftCardCode = (merchant: string, at: number) => {
-  const n = Math.abs([...`${merchant}${at}`].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7)) % 100_000_000;
-  return `${merchant.replace(/[^A-Za-z]/g, "").slice(0, 3).toUpperCase()}-${String(n).padStart(8, "0").replace(/(\d{4})(\d{4})/, "$1-$2")}`;
-};
+/** The offer list and payment review use the same purchase estimate and split. */
+export function bankPointsForOffer(offer: Parameters<typeof typicalPurchase>[0], balance: number) {
+  return paymentSplit(typicalPurchase(offer), offer.value, balance, true).bankPts;
+}
+
+/** Explicit offer spending overrides auto-use preferences, but requires a connected card. */
+export const bankSelectionEnabled = (requested: boolean, autoUse: boolean, connected: boolean) => connected && (requested || autoUse);
+
+/** Promote only the shared pick; preserve the engine's ordering for every other offer. */
+export function bankOfferOrder<T extends { id: string }>(best: T | null | undefined, ranked: readonly T[], unscored: readonly T[]): T[] {
+  const seen = new Set<string>();
+  return [...(best ? [best] : []), ...ranked, ...unscored].filter(offer => {
+    if (seen.has(offer.id)) return false;
+    seen.add(offer.id);
+    return true;
+  });
+}

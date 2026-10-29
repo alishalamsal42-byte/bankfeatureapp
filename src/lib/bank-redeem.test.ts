@@ -1,25 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { allCashBack, BANK, canAfford, giftCardCode, pointsFor } from "./bank";
+import { bankOfferOrder, bankPointsForOffer, bankSelectionEnabled } from "./bank";
 
-describe("Chase points redemption options", () => {
-  it("1 point = 1 cent", () => {
-    expect(pointsFor(5)).toBe(500);
-    expect(pointsFor(23.4)).toBe(2340);
-    expect(BANK.startingPoints).toBe(2340);
+describe("Bank points on picked offers", () => {
+  it("shows the current AI pick first without duplicating it or changing the remaining ranking", () => {
+    const a = { id: "coffee" }, b = { id: "food" }, c = { id: "shopping" };
+    expect(bankOfferOrder(b, [a, b], [c])).toEqual([b, a, c]);
+    expect(bankOfferOrder(null, [], [c, a])).toEqual([c, a]);
   });
-  it("checks the balance covers the amount", () => {
-    expect(canAfford(2340, 20)).toBe(true);
-    expect(canAfford(2340, 23.4)).toBe(true);
-    expect(canAfford(2340, 25)).toBe(false);
-    expect(canAfford(2340, 0)).toBe(false);
+  it("shows the same 330 Bank points used by a $9.80 lunch with a $6.50 reward", () => {
+    expect(bankPointsForOffer({ category: "Food", minSpend: 0, value: 6.5 }, 2340)).toBe(330);
+    expect(bankPointsForOffer({ category: "Food", minSpend: 0, value: 6.5 }, 100)).toBe(100);
   });
-  it("use-all cash back rounds down to whole dollars", () => {
-    expect(allCashBack(2340)).toBe(23);
-    expect(allCashBack(99)).toBe(0);
-  });
-  it("gift card codes look like real codes and are stable", () => {
-    expect(giftCardCode("Starbucks", 1)).toMatch(/^STA-\d{4}-\d{4}$/);
-    expect(giftCardCode("Starbucks", 1)).toBe(giftCardCode("Starbucks", 1));
-    expect(giftCardCode("Chick-fil-A", 1)).toMatch(/^CHI-/);
+  it("Use points enables Bank points even when automatic use is off", () => {
+    expect(bankSelectionEnabled(true, false, true)).toBe(true);
+    expect(bankSelectionEnabled(false, false, true)).toBe(false);
+    expect(bankSelectionEnabled(true, true, false)).toBe(false);
   });
 });

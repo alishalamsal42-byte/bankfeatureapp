@@ -37,6 +37,7 @@ export const Route = createFileRoute("/")({
 function HomeScreen() {
   const { bestNow, banner, connectedApps, prefs, bank, purchases, now } = useRecommendationState();
   const totalValue = connectionTotal(connectedApps) + bank.dollars;
+  const totalPoints = bank.points + connectedApps.reduce((sum, offer) => sum + offer.points, 0);
   const expiring = connectedApps.filter(o => !isLocked(o) && o.expiresInDays !== undefined && Number.isFinite(o.expiresInDays) && o.expiresInDays <= 3).sort((a, b) => (a.expiresInDays ?? 0) - (b.expiresInDays ?? 0)).slice(0, 3);
   const nearest = closestProgress(connectedApps);
   const [handoff, setHandoff] = useState<string | null>(null);
@@ -79,13 +80,20 @@ function HomeScreen() {
           <span className="text-lg font-bold tabular-nums">{money(accounts.card.balance)}</span>
         </div>
         <Link to="/bank-rewards" className="mt-3 flex items-center justify-between rounded-2xl bg-muted px-3 py-2.5 text-sm">
-          <span><span className="block font-semibold">{BANK.points}</span><span className="text-xs text-muted-foreground">Redeem instantly · no 3–4 day wait</span></span>
-          <span className="font-bold text-points">{bank.points.toLocaleString()} pts · {money(bank.dollars)}</span>
+          <span className="min-w-0"><span className="block font-semibold">{BANK.points} · Use on offers picked for you</span></span>
+          <span className="shrink-0 text-right font-bold text-points">{bank.points.toLocaleString()} pts<span className="block">{money(bank.dollars)}</span></span>
         </Link>
         <div className="mt-3 flex items-center justify-between text-sm">
           <span className="flex items-center gap-2"><Lock className="h-4 w-4" />{locked ? <span className="font-semibold text-destructive">Card locked</span> : "Lock card"}</span>
           <Switch checked={locked} onCheckedChange={toggleLock} aria-label="Lock card" />
         </div>
+      </section>
+
+      <section aria-label="All your rewards" className="mt-4 rounded-3xl border bg-card p-5">
+        <div className="flex items-center justify-between gap-3"><h2 className="font-bold">All your rewards</h2><Link to="/smart-match" className="text-sm font-semibold text-primary">View all →</Link></div>
+        <p className="mt-3 text-3xl font-extrabold text-points">{money(totalValue)}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{totalPoints.toLocaleString()} total points</p>
+        <Link to="/savings" className="mt-3 inline-block text-sm font-semibold text-primary">View savings →</Link>
       </section>
 
       <div className="mt-4 grid grid-cols-4 gap-2" aria-label="Quick actions">

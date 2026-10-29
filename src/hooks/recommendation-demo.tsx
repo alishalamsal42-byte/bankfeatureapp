@@ -56,7 +56,7 @@ function useStateEngine() {
   const [bankConnected, setBankConnected] = useState(true);
   const [bankPoints, setBankPoints] = useState<number>(BANK.startingPoints);
   const bank = useMemo(() => ({ connected: bankConnected, points: bankConnected ? bankPoints : 0, dollars: bankConnected ? bankDollars(bankPoints) : 0,
-    offer: { id: BANK.id, merchant: BANK.name, emoji: '', category: 'Shopping', title: 'Use anywhere with your card', points: bankPoints, value: bankDollars(bankPoints), minSpend: 0, expires: 'No expiry', reason: '', historyCategory: 'shopping' } as Offer }), [bankConnected, bankPoints]);
+    offer: { id: BANK.id, merchant: BANK.name, emoji: '', category: 'Shopping', title: 'Use on your offers', points: bankPoints, value: bankDollars(bankPoints), minSpend: 0, expires: 'No expiry', reason: '', historyCategory: 'shopping' } as Offer }), [bankConnected, bankPoints]);
   /** Redeemed rewards spend their balance: 0 pts / $0 everywhere. */
   const [demoStart, setDemoStart] = useState<number | null>(null);
   useEffect(() => {
@@ -179,14 +179,6 @@ function useStateEngine() {
       setBankPoints(p => p - used);
       setRedemptions(list => [{ id: `chase-${Date.now()}`, rewardId: `chase-${Date.now()}`, merchant: BANK.name, title: 'Card purchase', saved: bankDollars(used), points: 0, rewardValue: 0, bankPts: used, date: new Date().toISOString(), category: 'Shopping', suggested: false }, ...list]);
       return used;
-    },
-    /** Chase Rewards screen: instant cash back or a gift card, paid with bank points. Returns points used (0 if not enough). */
-    redeemBankPoints: (points: number, title: string, merchant: string = BANK.name) => {
-      const balance = bankConnected ? bankPoints : 0;
-      if (points <= 0 || points > balance) return 0;
-      setBankPoints(p => p - points);
-      setRedemptions(list => [{ id: `chase-${Date.now()}`, rewardId: `chase-${Date.now()}`, merchant, title, saved: bankDollars(points), points: 0, rewardValue: 0, bankPts: points, date: new Date().toISOString(), category: 'Shopping', suggested: false }, ...list]);
-      return points;
     },
     /** Expired code: points return, the reward becomes available again. */
     returnReward: (id: string) => {
