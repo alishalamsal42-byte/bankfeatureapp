@@ -4,7 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
 import { useRecommendationState } from "@/hooks/use-recommendations";
-import { closedLabel, hoursLabel, isValidAt, matchLabel, pickBestNow, pickTop } from "@/lib/model";
+import { closedLabel, hoursLabel, isValidAt, matchLabel, pickForNow, pickTop } from "@/lib/model";
 import { BrandLogo } from "@/components/BrandLogo";
 import { TopRewardPick } from "@/components/TopRewardPick";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ function ForYou() {
   const list = ranked.filter((o) => cat === "All" || o.category === cat);
   const strongTop = pickTop(list, hour, o => isInterested(o.category, prefs.interests), dayOfWeek);
   // Always show a pick when one is reachable: the strong top pick, or else the best option right now.
-  const top = prefs.history ? strongTop ?? pickBestNow(list, hour, o => isInterested(o.category, prefs.interests), dayOfWeek) ?? list[0] : undefined;
+  const top = prefs.history ? pickForNow(list, hour, o => isInterested(o.category, prefs.interests), dayOfWeek) : undefined;
   const noPick = prefs.history && !top && list.length > 0;
   const more = noPick ? byExpiryThenValue([...list, ...unscored.filter(o => cat === "All" || o.category === cat)]).map(o => ({ ...o, scores: undefined })) : [...list.filter(o => o !== top).map(o => ({ ...o, scores: o.scores })), ...unscored.filter(o => cat === "All" || o.category === cat).map(o => ({ ...o, scores: undefined }))];
   const skipped = skippedCategories[skippedCategories.length - 1];
@@ -54,8 +54,8 @@ function ForYou() {
       {!prefs.history && <p role="note" className="mb-4 rounded-2xl border bg-card p-4 text-sm text-muted-foreground">Personalized picks are off. Turn on purchase history in Preferences.</p>}
       {top && <TopRewardPick isStrong={Boolean(strongTop)} showLocation={prefs.location} reward={top} hour={Math.floor(hour)} onSkip={() => skipCategory(top.historyCategory)} />}
       {noPick && <section aria-label="No top pick" className="shadow-soft rounded-3xl bg-card p-5">
-        <p className="font-bold">Nothing’s a strong match right now</p>
-        <p className="mt-1 text-sm text-muted-foreground">We’ll suggest a reward when you’re likely to use it.</p>
+        <p className="font-bold">No offers available to use right now</p>
+        <p className="mt-1 text-sm text-muted-foreground">Your offers are below, with their available hours.</p>
       </section>}
       {more.length > 0 && <h2 className="mt-5 mb-2 text-sm font-bold">{noPick ? "Your rewards" : "More for you"}</h2>}
       <div className="divide-y border-t">
@@ -68,7 +68,7 @@ function ForYou() {
                 <p className="text-xs text-muted-foreground">{o.title}</p>
                 <p className="mt-1 text-xs font-bold text-points">{offerCostShort(o)}</p>
               </div>
-              <Button asChild size="sm"><Link to="/redeem" search={{ id: o.id }}>Get</Link></Button>
+              <Button asChild size="sm"><Link to="/redeem" search={{ id: o.id, useBank: o.bankFunded || undefined }}>{o.bankFunded ? "Use points" : "Get"}</Link></Button>
             </div>
             <div className="mt-2 flex items-center justify-between gap-3 text-xs text-muted-foreground">
               <span className="min-w-0">{o.online ? "Online" : prefs.location ? `${Number((o.distanceMiles ?? 0).toFixed(2))} mi away` : ""}</span>

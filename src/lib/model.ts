@@ -79,6 +79,9 @@ export const pickTop = <T extends Pickable>(ranked: readonly T[], hour: number, 
 export const pickBestNow = <T extends Pickable & { scores: { habit: number; match?: number } }>(ranked: readonly T[], hour: number, allow: (r: T) => boolean = () => true, day?: number) =>
   ranked.filter(r => isValidAt(r, hour) && (day === undefined || isOpenAt(r, day, hour)) && (Boolean(r.online) || (r.distanceMiles !== undefined && r.distanceMiles <= TOP_PICK_MAX_MILES)) && allow(r))
     .reduce<T | undefined>((best, r) => !best || r.scores.habit > best.scores.habit || (r.scores.habit === best.scores.habit && (r.scores.match ?? 0) > (best.scores.match ?? 0)) ? r : best, undefined);
+/** A visible AI fallback may be farther away, but must still be open and usable. Never used for alerts. */
+export const pickForNow = <T extends Pickable & { scores: { habit: number; match?: number } }>(ranked: readonly T[], hour: number, allow: (r: T) => boolean = () => true, day?: number) =>
+  pickTop(ranked, hour, allow, day) ?? pickBestNow(ranked, hour, allow, day) ?? ranked.find(r => isValidAt(r, hour) && (day === undefined || isOpenAt(r, day, hour)) && allow(r));
 const fmtH = (h: number) => `${h % 12 || 12} ${h >= 12 && h < 24 ? "PM" : "AM"}`;
 export const hoursLabel = (h: readonly [number, number]) => `Available ${fmtH(h[0])}–${fmtH(h[1])}`;
 /** Minimum match for a suggestion notification. */

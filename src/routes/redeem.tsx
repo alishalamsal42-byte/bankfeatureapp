@@ -7,7 +7,7 @@ import { CODE_VALID_MS, formatCountdown, isCardOffer, minSpendShortfall, redempt
 import { BANK } from "@/lib/bank";
 import { Input } from "@/components/ui/input";
 import type { Offer } from "@/lib/rewards";
-import { bankPointsForOffer, bankSelectionEnabled, offerRewardValue, paymentSplit, typicalPurchase } from "@/lib/bank";
+import { bankPointsForOffer, bankSelectionEnabled, canFundOffer, offerRewardValue, paymentSplit, typicalPurchase } from "@/lib/bank";
 import { Switch } from "@/components/ui/switch";
 import { AppShell, ScreenHeader } from "@/components/AppShell";
 import { getOffer, user } from "@/lib/rewards";
@@ -34,22 +34,23 @@ const steps = ["Review", "Confirm", "Use"];
 
 function Redeem() {
   const { id, useBank: requestedBank } = Route.useSearch();
-  const { redeemReward, returnReward, connectedApps, bank, prefs, payWithBank } = useRewardEngine();
+  const { redeemReward, returnReward, connectedApps, availableRewards, bank, prefs, payWithBank } = useRewardEngine();
   const isBank = id === BANK.id;
-  const o = isBank ? bank.offer : getOffer(id ?? "coffee");
+  const o = isBank ? bank.offer : availableRewards.find(offer => offer.id === (id ?? "coffee")) ?? getOffer(id ?? "coffee");
   const [step, setStep] = useState(0);
   const merchantBalance = connectedApps.find(a => a.id === o.id)?.points ?? o.points;
   const askTotal = isBank || o.minSpend > 0;
   const [amount, setAmount] = useState(() => isBank ? 12 : typicalPurchase(o));
   useEffect(() => { setAmount(isBank ? 12 : typicalPurchase(o)); }, [o.id]);
   const short = isBank ? 0 : minSpendShortfall(amount, o.minSpend);
-  const invalid = !(amount > 0) || short > 0;
+  const fundingAllowed = canFundOffer(o, bank.points, bank.connected);
+  const invalid = !(amount > 0) || short > 0 || !fundingAllowed;
   const [useBank, setUseBank] = useState(true);
   const [paid, setPaid] = useState<ReturnType<typeof paymentSplit> | null>(null);
   useEffect(() => { setStep(0); setPaid(null); }, [o.id]);
-  useEffect(() => { setUseBank(bankSelectionEnabled(requestedBank === true, prefs.bankAuto, bank.connected)); }, [requestedBank, prefs.bankAuto, bank.connected, o.id]);
+  useEffect(() => { setUseBank(bankSelectionEnabled(requestedBank === true || o.bankFunded === true, prefs.bankAuto, bank.connected)); }, [requestedBank, prefs.bankAuto, bank.connected, o.id, o.bankFunded]);
   const split = paymentSplit(askTotal ? amount : typicalPurchase(o), isBank || short > 0 ? 0 : offerRewardValue(o), bank.points, isBank || (useBank && bank.connected));
-  const confirm = () => { setPaid(split); if (isBank) payWithBank(split.total); else redeemReward(o, split.bankPts); };
+  const confirm = () => { if (invalid) return; setPaid(split); if (isBank) payWithBank(split.total); else redeemReward(o, split.bankPts); };
   return (
     <AppShell>
       <ScreenHeader title="Spend your points" subtitle="Real reward, zero catch." />
@@ -107,7 +108,7 @@ function Redeem() {
           {bank.connected && <div className="mt-4 border-t pt-4">
             <label className="flex items-center justify-between gap-3">
               <span><span className="block font-semibold">Use {BANK.points} for the rest</span><span className="text-xs text-muted-foreground">{bank.points.toLocaleString()} pts ≈ ${bank.dollars.toFixed(2)} available</span></span>
-              <Switch checked={useBank} onCheckedChange={setUseBank} aria-label={`Use ${BANK.points} for the rest`} />
+              <Switch checked={useBank} disabled={o.bankFunded} onCheckedChange={setUseBank} aria-label={`Use ${BANK.points} for the rest`} />
             </label>
             <div className="mt-3 space-y-1">
               <div className="flex justify-between"><span className="text-muted-foreground">{o.bankFunded ? "Bill" : askTotal ? "Purchase total" : "Typical purchase"}</span><span>${split.total.toFixed(2)}</span></div>
@@ -124,6 +125,7 @@ function Redeem() {
         ...(paid.bankPts > 0 ? [`Remaining ${BANK.points} balance: ${bank.points.toLocaleString()} pts`] : []),
       ]} /> : <MerchantCode offer={o} balance={connectedApps.find(a => a.merchant === o.merchant)?.points ?? 0} onExpire={() => returnReward(o.id)} onRenew={() => redeemReward(o, 0)} />)}
 
+      {!fundingAllowed && step < 2 && <p role="alert" className="mt-4 text-sm font-semibold text-warning">{bank.connected ? `This offer needs ${bankPointsForOffer(o, Infinity).toLocaleString()} ${BANK.points}. You have ${bank.points.toLocaleString()} pts.` : `Connect your Student Credit Card to use this offer.`}</p>}
       {step < 2 ? (
         <Button disabled={invalid || (isBank && split.bankPts === 0)} onClick={() => { if (step === 1) confirm(); setStep(step + 1); }} className="mt-5 h-12 w-full rounded-full">
           {step === 0 ? "Continue" : isBank ? "Confirm payment" : "Confirm redemption"}

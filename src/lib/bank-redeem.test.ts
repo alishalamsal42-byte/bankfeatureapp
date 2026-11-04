@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bankOfferOrder, bankPointsForOffer, bankSelectionEnabled } from "./bank";
+import { bankOfferOrder, bankPointsForOffer, bankSelectionEnabled, canFundOffer, offerSavings } from "./bank";
 
 describe("Credit points on picked offers", () => {
   it("shows the current AI pick first without duplicating it or changing the remaining ranking", () => {
@@ -27,6 +27,15 @@ describe("bank-funded card offers", () => {
     expect(orv(go("netflix"))).toBe(0);
     expect(ep).not.toContain("netflix");
     expect(ep).not.toContain("spotify");
+  });
+  it("requires all 700 points and a connected card to fund Netflix", () => {
+    expect(canFundOffer(go("netflix"), 700, true)).toBe(true);
+    expect(canFundOffer(go("netflix"), 699, true)).toBe(false);
+    expect(canFundOffer(go("netflix"), 2340, false)).toBe(false);
+  });
+  it("counts the $7 Netflix points payment once in savings", () => {
+    expect(offerSavings(go("netflix"), 700)).toBe(7);
+    expect(offerSavings(go("coffee"), 75)).toBe(6);
   });
 });
 

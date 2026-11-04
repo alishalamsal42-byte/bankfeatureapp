@@ -40,7 +40,7 @@ function HomeScreen() {
   const expiring = [...connectedApps, ...availableRewards.filter(o => o.bankFunded)].filter(o => !isLocked(o) && o.expiresInDays !== undefined && Number.isFinite(o.expiresInDays) && o.expiresInDays <= 3).sort((a, b) => (a.expiresInDays ?? 0) - (b.expiresInDays ?? 0)).slice(0, 5);
   const nearest = closestProgress(connectedApps);
   const [handoff, setHandoff] = useState<string | null>(null);
-  const top = bestNow ?? (prefs.history ? ranked[0] : undefined);
+  const top = bestNow;
   const topIsStrong = top !== undefined && top === topPick;
   const titleTap = useDemoTitleTap();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -111,7 +111,7 @@ function HomeScreen() {
           </div>
         </div>
         <div className="mt-3 flex items-center gap-3">
-          <Button asChild className="h-11 flex-1 rounded-2xl"><Link to="/redeem" search={{ id: top.id }}>Pay with rewards</Link></Button>
+          <Button asChild className="h-11 flex-1 rounded-2xl"><Link to="/redeem" search={{ id: top.id, useBank: top.bankFunded || undefined }}>Pay with rewards</Link></Button>
           <Link to="/for-you" className="text-sm font-semibold text-primary">See why →</Link>
         </div>
       </section>}

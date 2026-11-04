@@ -28,6 +28,7 @@ export type ReasonInput = {
   online?: boolean | undefined;
   distanceMiles?: number | undefined;
   expiresInDays?: number | undefined;
+  renews?: boolean | undefined;
   hideDistance?: boolean | undefined;
   merchant?: string | undefined;
 };
@@ -50,6 +51,9 @@ export function pickReason(r: ReasonInput): string {
     text = r.hideDistance ? `${when}.` : `${when}, ${where}.`;
   }
   const d = r.expiresInDays;
-  if (d !== undefined && Number.isFinite(d) && d >= 0 && d <= 7) text += d === 0 ? " Expires today." : d === 1 ? " Expires tomorrow." : ` Expires in ${d} days.`;
+  if (d !== undefined && Number.isFinite(d) && d >= 0 && d <= 7) {
+    const action = r.renews ? "Renews" : "Expires";
+    text += d === 0 ? ` ${action} today.` : d === 1 ? ` ${action} tomorrow.` : ` ${action} in ${d} days.`;
+  }
   return text;
 }

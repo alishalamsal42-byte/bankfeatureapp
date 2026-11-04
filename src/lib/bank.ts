@@ -32,6 +32,14 @@ export function bankPointsForOffer(offer: Parameters<typeof typicalPurchase>[0],
   return paymentSplit(typicalPurchase(offer), offerRewardValue(offer), balance, true).bankPts;
 }
 
+/** Bank-funded offers require their full advertised points cost and a connected card. */
+export const canFundOffer = (offer: Parameters<typeof typicalPurchase>[0], balance: number, connected: boolean) =>
+  !offer.bankFunded || (connected && balance >= Math.round(typicalPurchase(offer) * 100));
+
+/** Count merchant rewards and Credit points once each, including online bank-funded offers. */
+export const offerSavings = (offer: Parameters<typeof offerRewardValue>[0], bankPts: number) =>
+  Math.round((offerRewardValue(offer) + bankDollars(bankPts)) * 100) / 100;
+
 /** Explicit offer spending overrides auto-use preferences, but requires a connected card. */
 export const bankSelectionEnabled = (requested: boolean, autoUse: boolean, connected: boolean) => connected && (requested || autoUse);
 

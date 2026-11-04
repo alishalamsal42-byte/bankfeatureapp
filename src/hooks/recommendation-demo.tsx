@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Context as ReactContext } from 'react';
-import { pickBestNow, pickTop, rankRewards, unscoredRewards, type MapPoint, type ModelCategory } from '@/lib/model';
+import { pickForNow, pickTop, rankRewards, unscoredRewards, type MapPoint, type ModelCategory } from '@/lib/model';
 import { mockPlaces } from '@/lib/model-fixtures';
 import { offers, demoOffers, partners, isLocked, examplePartnerIds, type Offer } from '@/lib/rewards';
 import { appCatalog, updateConnections } from '@/lib/connection-catalog';
@@ -15,7 +15,7 @@ import { APP_NAME } from '@/lib/app-config';
 import { learn, isModelCategory, type LearningKind } from '@/lib/learning';
 import { useLearning, setLearning, getLearning } from '@/hooks/learning-store';
 import { defaultHoursSinceLast, msUntilMidnight } from '@/lib/mock-history';
-import { BANK, bankDollars } from '@/lib/bank';
+import { BANK, bankDollars, canFundOffer, offerRewardValue, offerSavings } from '@/lib/bank';
 import { usePreferences } from './preferences-store';
 import { bannersAllowed, byExpiryThenValue, expiryAlertCandidate, interestsFirst, isInterested } from '@/lib/preferences';
 /** spendPace overrides the spend velocity calculated from Sarah's history (0.6–1.4; 1.0 = normal week). */
@@ -98,7 +98,7 @@ function useStateEngine() {
     const locationTimer = setInterval(() => { void check(); }, 60000);
     return () => { active = false; clearInterval(clock); clearInterval(locationTimer); clearTimeout(midnight); };
   }, []);
-  const hour = controls?.hour ?? now?.getHours() ?? 0;
+  const hour = controls?.hour ?? (now ? now.getHours() + now.getMinutes() / 60 : 0);
   const learning = useLearning();
   const dayOfWeek = controls?.dayOfWeek ?? now?.getDay() ?? 0;
   /** Sarah's history (today's later entries hidden) plus in-app redemptions. */
@@ -125,7 +125,7 @@ function useStateEngine() {
   /** Top pick only when it belongs to a selected interest. */
   const topPick = pickTop(ranked, hour, r => isInterested(r.category, prefs.interests), dayOfWeek);
   /** What Home and For You show: the strong top pick, or else the best option right now (never a notification). */
-  const bestNow = topPick ?? pickBestNow(ranked, hour, r => isInterested(r.category, prefs.interests), dayOfWeek);
+  const bestNow = pickForNow(ranked, hour, r => isInterested(r.category, prefs.interests), dayOfWeek);
   // Re-evaluate on scoring changes, not on dismissal or ledger writes.
   useEffect(() => {
     if (!now || !ledger) return;
@@ -163,13 +163,14 @@ function useStateEngine() {
     bank,
     redeemReward: (reward: Offer, bankPts = 0) => {
       if (redeemedIds.includes(reward.id)) return;
+      if (!canFundOffer(reward, bankPts, bankConnected) || !canFundOffer(reward, bankPoints, bankConnected)) return;
       const rankedMatch = ranked.find(r => r.id === reward.id)?.scores.match;
       const used = Math.min(bankPts, bankConnected ? bankPoints : 0);
       setRedeemedIds(ids => [...ids, reward.id]);
       learnEvent(reward.historyCategory, 'redeem');
       recordPurchase(reward.historyCategory, reward.merchant);
       if (used > 0) setBankPoints(p => p - used);
-      setRedemptions(list => [{ id: `${reward.id}-${Date.now()}`, rewardId: reward.id, merchant: reward.merchant, title: reward.title, saved: reward.value + bankDollars(used), points: reward.points, rewardValue: reward.value, bankPts: used, date: new Date().toISOString(), category: reward.category, expiresInDays: reward.expiresInDays, match: rankedMatch, suggested: rankedMatch !== undefined }, ...list]);
+      setRedemptions(list => [{ id: `${reward.id}-${Date.now()}`, rewardId: reward.id, merchant: reward.merchant, title: reward.title, saved: offerSavings(reward, used), points: reward.points, rewardValue: offerRewardValue(reward), bankPts: used, date: new Date().toISOString(), category: reward.category, expiresInDays: reward.expiresInDays, match: rankedMatch, suggested: rankedMatch !== undefined }, ...list]);
       setBanner(current => current?.id === reward.id ? null : current);
     },
     /** Chase-only card purchase: points cover part or all of the total. */

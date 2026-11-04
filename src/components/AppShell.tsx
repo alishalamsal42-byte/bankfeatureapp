@@ -16,17 +16,20 @@ const tabs = [
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const { now, controls } = useRewardEngine();
+  const hour = controls?.hour;
+  const clock = hour === undefined ? now?.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: false }) ?? "—" : `${String(Math.floor(hour)).padStart(2, "0")}:${String(Math.round((hour % 1) * 60)).padStart(2, "0")}`;
   return (
     <div className="flex min-h-screen items-start justify-center sm:py-10">
-      <div className="relative flex h-screen w-full max-w-[420px] flex-col overflow-hidden bg-background sm:h-[860px] sm:rounded-[3rem] sm:border-[10px] sm:border-card sm:shadow-phone">
+      <div className="relative flex h-dvh w-full max-w-[420px] flex-col overflow-hidden bg-background sm:h-[min(860px,calc(100dvh-80px))] sm:rounded-[3rem] sm:border-[10px] sm:border-card sm:shadow-phone">
         <RewardNotification />
         <RewardDemoPanel />
         <div className="flex shrink-0 items-center justify-between px-7 pt-4 pb-2 text-sm font-semibold">
-          <span>8:15</span>
+          <span>{clock}</span>
+          <AskButton />
           <span className="flex items-center gap-1"><Signal className="h-4 w-4" /><Wifi className="h-4 w-4" /><BatteryFull className="h-5 w-5" /></span>
         </div>
         <main className="no-scrollbar flex-1 overflow-y-auto px-5 pb-20">{children}</main>
-        <AskButton />
         <nav className="grid shrink-0 grid-cols-5 border-t bg-card px-2 pt-2 pb-5">
           {tabs.map((t) => (
             <Link
@@ -95,5 +98,5 @@ export function Progress({ value, tone = "bg-primary" }: { value: number; tone?:
 function AskButton() {
   const router = useRouter();
   if (router.state.location.pathname === "/assistant") return null;
-  return <Link to="/assistant" aria-label="Ask about your rewards" className="absolute right-5 bottom-24 z-30 grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-soft"><MessageCircle className="h-5 w-5" /></Link>;
+  return <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full"><Link to="/assistant" aria-label="Ask about your rewards"><MessageCircle className="h-5 w-5" /></Link></Button>;
 }

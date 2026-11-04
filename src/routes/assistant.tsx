@@ -41,7 +41,7 @@ function Assistant() {
     if (!q.trim() || busy) return;
     const { context, allowedRewardIds } = buildAssistantContext({
       dayOfWeek: engine.dayOfWeek, hour: engine.controls?.hour ?? engine.hour, place: engine.controls?.place ?? "Near campus (sample distances)",
-      ranked: engine.ranked, unscored: engine.unscored, topPickId: engine.topPick?.id, bank: engine.bank, weekly: engine.weekly,
+      ranked: engine.ranked, unscored: engine.unscored, topPickId: engine.bestNow?.id, bank: engine.bank, weekly: engine.weekly,
       usualHour: engine.learning.usualHour, purchases: engine.purchases, prefs: engine.prefs as unknown as Record<string, unknown>, spendVelocity: engine.spendVelocity,
     });
     const history = msgs.filter(m => !m.error).slice(-10).map(({ role, content }) => ({ role, content }));
@@ -66,7 +66,7 @@ function Assistant() {
           const reward = m.rewardId ? all.find(r => r.id === m.rewardId) : undefined;
           return <div key={i} className={m.role === "user" ? "ml-10 rounded-2xl bg-primary p-3 text-sm text-primary-foreground" : `mr-6 rounded-2xl border bg-card p-3 text-sm ${m.error ? "text-destructive" : ""}`}>
             <p>{m.content}</p>
-            {reward && <Button asChild size="sm" className="mt-3 w-full"><Link to="/redeem" search={{ id: reward.id }}>Use {reward.merchant} {reward.title}<ArrowRight /></Link></Button>}
+            {reward && <Button asChild size="sm" className="mt-3 w-full"><Link to="/redeem" search={{ id: reward.id, useBank: reward.bankFunded || undefined }}>Use {reward.merchant} {reward.title}<ArrowRight /></Link></Button>}
           </div>;
         })}
         {busy && <p className="mr-6 rounded-2xl border bg-card p-3 text-sm text-muted-foreground">Thinking…</p>}

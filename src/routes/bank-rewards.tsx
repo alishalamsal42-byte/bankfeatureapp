@@ -49,7 +49,7 @@ function BankRewards() {
           const split = paymentSplit(total, offerRewardValue(offer), bank.points, true);
           return (
             <article key={offer.id} aria-label={`${offer.merchant} offer`} className="py-4">
-              {offer.id === offers[0]?.id && <p className="mb-2 text-xs font-bold text-success">{topPick ? "AI top pick" : "AI pick for right now"}</p>}
+              {offer.id === bestNow?.id && <p className="mb-2 text-xs font-bold text-success">{topPick ? "AI top pick" : "AI pick for right now"}</p>}
               <div className="flex items-center gap-3">
                 <BrandLogo name={offer.merchant} />
                 <div className="min-w-0 flex-1">

@@ -20,7 +20,7 @@ export function TopRewardPick({ reward, onSkip, hour, showLocation = true, isStr
   const usual = scores.atUsualTime && scores.usualHour !== undefined ? ` · around your usual ${formatHour(scores.usualHour)} ${reward.historyCategory}` : "";
   const location = reward.online ? "Online" : `${Number((reward.distanceMiles ?? 0).toFixed(2))} mi away`;
   const value = offerCostShort(reward);
-  const reason = pickReason({ merchant: reward.merchant, hour, category: reward.historyCategory, atUsualTime: Boolean(scores.atUsualTime), usualHour: scores.usualHour, online: reward.online, distanceMiles: reward.distanceMiles, hideDistance: !showLocation, expiresInDays: reward.expiresInDays });
+  const reason = pickReason({ merchant: reward.merchant, hour, category: reward.historyCategory, atUsualTime: Boolean(scores.atUsualTime), usualHour: scores.usualHour, online: reward.online, distanceMiles: reward.distanceMiles, hideDistance: !showLocation, expiresInDays: reward.expiresInDays, renews: reward.renews });
   const strong = scores.match >= 0.10;
   const rows = [
     { label: "Likely now", text: likelyNowLabel(scores.visitRate, reward.modelCategory ?? reward.historyCategory, weekly), value: scores.visitRate, tone: "bg-primary" },
@@ -46,7 +46,7 @@ export function TopRewardPick({ reward, onSkip, hour, showLocation = true, isStr
     <p className="mt-4 text-sm text-muted-foreground">{reason}</p>
     {learning.events.length > 0 && <p className="mt-2 text-xs font-semibold text-primary">Updated from your last {learning.events.length} {learning.events.length === 1 ? "action" : "actions"}.</p>}
     {bankLine && <p className="mt-2 text-sm font-semibold text-success">Pay $0 with {reward.merchant} {reward.title.toLowerCase()} + {bankPointsForOffer(reward, bank.points).toLocaleString()} pts.</p>}
-    <Button asChild className="mt-4 h-12 w-full"><Link to="/redeem" search={{ id: reward.id }}>Pay with points<ArrowRight /></Link></Button>
+    <Button asChild className="mt-4 h-12 w-full"><Link to="/redeem" search={{ id: reward.id, useBank: reward.bankFunded || undefined }}>Pay with points<ArrowRight /></Link></Button>
     <div className="mt-1 text-center"><Button variant="link" onClick={onSkip} className="text-muted-foreground">Not now</Button></div>
   </section>;
 }

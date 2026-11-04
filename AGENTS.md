@@ -22,3 +22,5 @@
 - Keep bank card points (Chase example partner) in their own pure tested bank module and root-provider state, never in merchant offers, so they never get a match score, never enter expiry/progress lists, and payment splits deduct from one shared balance.
 - Credit points offer lists reuse the shared engine ordering and pure payment estimate; an explicit payment search flag enables Credit points independent of auto-use preferences, so displayed point costs match checkout.
 - Bank-funded offers (bankFunded flag, e.g. Amazon, Netflix, Spotify) have no merchant balance and never appear on Connect; their cost is paid fully with Credit points via offerRewardValue = 0, and offerCostLabel is the single source of cost wording so list math, labels and checkout agree.
+- Use the shared pure pickForNow selector on recommendation screens; fallbacks must be trained, open and in offer hours, and never loosen notification eligibility.
+- Guard bank-funded redemptions with canFundOffer and record offerSavings so a card offer cannot be redeemed without its full point cost or counted twice in savings.
