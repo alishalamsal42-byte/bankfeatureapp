@@ -119,14 +119,17 @@
   background: radial-gradient(120% 100% at 50% 0%, oklch(0.95 0.004 260), var(--stage));
 }
 
+/* A real 6.3-inch phone screen: 420 x 915 CSS px (Pixel 9 Pro class) plus a 9px bezel.
+   --phone-scale is set by AppShell so the device shrinks to fit short windows
+   while keeping true phone proportions and real on-screen text sizes. */
 .phone-device {
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: min(940px, calc(100dvh - 16px));
-  /* Keep a phone-shaped screen: in a short window the device narrows instead of turning square. */
-  width: min(520px, calc(100vw - 16px), max(340px, calc((100dvh - 16px) * 0.8)));
+  width: calc(420px + 18px);
+  height: calc(915px + 18px);
+  zoom: var(--phone-scale, 1);
   background: var(--background);
   border: 9px solid oklch(0.17 0.012 260);
   border-radius: 2.5rem;
@@ -166,11 +169,12 @@
 }
 
 /* On a real phone (or a very short window) drop the chrome and go edge-to-edge. */
-@media (max-width: 440px), (max-height: 440px) {
+@media (max-width: 360px), (max-height: 360px) {
   .phone-stage { padding: 0; }
   .phone-device {
-    height: 100dvh;
     width: 100vw;
+    height: 100dvh;
+    zoom: 1;
     border: 0;
     border-radius: 0;
     box-shadow: none;

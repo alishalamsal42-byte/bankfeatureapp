@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useRewardEngine } from "@/hooks/recommendation-demo";
 import { RewardNotification } from "./RewardNotification";
 import { RewardDemoPanel } from "./RewardDemoPanel";
@@ -19,8 +19,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { now, controls } = useRewardEngine();
   const hour = controls?.hour;
   const clock = hour === undefined ? now?.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: false }) ?? "—" : `${String(Math.floor(hour)).padStart(2, "0")}:${String(Math.round((hour % 1) * 60)).padStart(2, "0")}`;
+  const scale = usePhoneScale();
   return (
-    <div className="phone-stage">
+    <div className="phone-stage" style={{ "--phone-scale": scale } as CSSProperties}>
       <div className="phone-device">
         <RewardNotification />
         <RewardDemoPanel />
@@ -102,4 +103,26 @@ function AskButton() {
   const router = useRouter();
   if (router.state.location.pathname === "/assistant") return null;
   return <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full"><Link to="/assistant" aria-label="Ask about your rewards"><MessageCircle className="h-5 w-5" /></Link></Button>;
+}
+
+// A 6.3-inch phone screen is 420 x 915 CSS px; the bezel adds 9px per side.
+const PHONE_W = 420 + 18;
+const PHONE_H = 915 + 18;
+
+/**
+ * Renders the device at true phone size and shrinks it (never stretches it)
+ * so it still fits a short window. Returns a zoom factor for --phone-scale.
+ */
+function usePhoneScale() {
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const fit = () => {
+      const s = Math.min(1, (window.innerHeight - 16) / PHONE_H, (window.innerWidth - 16) / PHONE_W);
+      setScale(Math.max(0.4, s));
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
+  return scale;
 }
