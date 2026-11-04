@@ -34,13 +34,14 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeScreen() {
-  const { bestNow, banner, connectedApps, availableRewards, prefs, bank, purchases, now } = useRecommendationState();
+  const { bestNow, topPick, banner, connectedApps, availableRewards, prefs, bank, purchases, now, ranked } = useRecommendationState();
   const totalValue = connectionTotal(connectedApps) + bank.dollars;
   const totalPoints = bank.points + connectedApps.reduce((sum, offer) => sum + offer.points, 0);
   const expiring = [...connectedApps, ...availableRewards.filter(o => o.bankFunded)].filter(o => !isLocked(o) && o.expiresInDays !== undefined && Number.isFinite(o.expiresInDays) && o.expiresInDays <= 3).sort((a, b) => (a.expiresInDays ?? 0) - (b.expiresInDays ?? 0)).slice(0, 5);
   const nearest = closestProgress(connectedApps);
   const [handoff, setHandoff] = useState<string | null>(null);
-  const top = bestNow;
+  const top = bestNow ?? (prefs.history ? ranked[0] : undefined);
+  const topIsStrong = top !== undefined && top === topPick;
   const titleTap = useDemoTitleTap();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [locked, setLocked] = useState(false);
@@ -100,8 +101,8 @@ function HomeScreen() {
       </div>
 
       <div className="mt-6 flex items-center justify-between"><h2 className="text-base font-bold">Benefits &amp; offers</h2><Link to="/smart-match" className="text-sm font-semibold text-primary">{money(totalValue)} in rewards →</Link></div>
-      <p className="mt-3 text-sm font-semibold text-muted-foreground">Right now (AI pick)</p>
-      {top && <section aria-label="AI pick" className="mt-2 rounded-3xl border-2 border-primary bg-card p-4">
+      {top && <section aria-label="AI pick" className="mt-3 rounded-3xl border-2 border-primary bg-card p-4">
+        <p className="mb-3 text-xs font-bold uppercase tracking-widest">{topIsStrong ? "AI top pick" : "AI pick for right now"}</p>
         <div className="flex items-center gap-3">
           <BrandLogo name={top.merchant} />
           <div className="min-w-0 flex-1">
