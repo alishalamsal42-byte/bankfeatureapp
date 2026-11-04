@@ -20,8 +20,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const hour = controls?.hour;
   const clock = hour === undefined ? now?.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: false }) ?? "—" : `${String(Math.floor(hour)).padStart(2, "0")}:${String(Math.round((hour % 1) * 60)).padStart(2, "0")}`;
   return (
-    <div className="flex min-h-screen items-start justify-center sm:py-10">
-      <div className="relative flex h-dvh w-full max-w-[420px] flex-col overflow-hidden bg-background sm:h-[min(860px,calc(100dvh-80px))] sm:rounded-[3rem] sm:border-[10px] sm:border-card sm:shadow-phone">
+    <div className="flex min-h-screen items-start justify-center lg:py-10">
+      <div className="relative flex h-dvh w-full max-w-none flex-col overflow-hidden bg-background lg:max-w-[420px] lg:h-[min(860px,calc(100dvh-80px))] lg:rounded-[3rem] lg:border-[10px] lg:border-card lg:shadow-phone">
         <RewardNotification />
         <RewardDemoPanel />
         <div className="flex shrink-0 items-center justify-between px-7 pt-4 pb-2 text-sm font-semibold">
