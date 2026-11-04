@@ -164,7 +164,7 @@ export const examplePartnerIds = ["publix", "target", "walmart"] as const;
 
 export const offers: Offer[] = baseOffers.map(o => {
   const modelCategory = o.category === "Coffee" ? "coffee" : o.category === "Food" ? "food" : o.category === "Grocery" ? "grocery" : o.category === "Online" || o.merchant === "Amazon" ? "online" : o.merchant === "Uber" || o.merchant === "Lyft" ? "ride" : undefined;
-  const historyCategory = modelCategory ?? (o.category === "Travel" ? "travel" : o.category === "Fun" ? "fun" : "shopping");
+  const historyCategory = modelCategory ?? ((o.category as Offer["category"]) === "Travel" ? "travel" : o.category === "Fun" ? "fun" : "shopping");
   const distances: Record<string, number> = { coffee: 0.075, cfa: 0.4, lunch: 0.2, mcd: 0.7, bk: 1.2, taco: 0.56, ride: 0.05, lyft: 0.08, nike: 1.1, tjx: 0.8, bb: 2, movie: 1.5, publix: 0.8, walmart: 2.4 };
   const expiresInDays = o.expires === "Today" ? 0 : o.expires === "Tomorrow" ? 1 : Number.parseInt(o.expires, 10);
   return { ...o, ...(openingHours[o.merchant] ? { openHours: openingHours[o.merchant] } : {}), ...(o.id === "coffee" ? { mapPoint: mockPlaces.Library } : {}), expiresInDays, modelCategory, historyCategory, distanceMiles: distances[o.id] ?? 0, online: o.merchant === "Amazon" || o.category === "Online" };
