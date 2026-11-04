@@ -20,29 +20,31 @@ export function AppShell({ children }: { children: ReactNode }) {
   const hour = controls?.hour;
   const clock = hour === undefined ? now?.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: false }) ?? "—" : `${String(Math.floor(hour)).padStart(2, "0")}:${String(Math.round((hour % 1) * 60)).padStart(2, "0")}`;
   return (
-    <div className="flex min-h-screen items-start justify-center lg:py-10">
-      <div className="relative flex h-dvh w-full max-w-none flex-col overflow-hidden bg-background lg:max-w-[420px] lg:h-[min(860px,calc(100dvh-80px))] lg:rounded-[3rem] lg:border-[10px] lg:border-card lg:shadow-phone">
+    <div className="mobile-app flex h-dvh w-full overflow-hidden bg-background">
+      <div className="relative flex min-h-0 w-full flex-col overflow-hidden">
         <RewardNotification />
         <RewardDemoPanel />
-        <div className="flex shrink-0 items-center justify-between px-7 pt-4 pb-2 text-sm font-semibold">
+        <div className="mx-auto grid w-full max-w-xl shrink-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-5 pt-3 pb-2 text-sm font-semibold">
           <span>{clock}</span>
           <AskButton />
-          <span className="flex items-center gap-1"><Signal className="h-4 w-4" /><Wifi className="h-4 w-4" /><BatteryFull className="h-5 w-5" /></span>
+          <span className="flex shrink-0 items-center justify-end gap-1"><Signal className="h-4 w-4" /><Wifi className="h-4 w-4" /><BatteryFull className="h-5 w-5" /></span>
         </div>
-        <main className="no-scrollbar flex-1 overflow-y-auto px-5 pb-20">{children}</main>
-        <nav className="grid shrink-0 grid-cols-5 border-t bg-card px-2 pt-2 pb-5">
+        <main className="no-scrollbar mx-auto min-h-0 w-full max-w-xl flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain px-5 pb-6">{children}</main>
+        <nav aria-label="Main navigation" className="mobile-app-nav shrink-0 border-t bg-card">
+          <div className="mx-auto grid w-full max-w-xl grid-cols-5 px-2 pt-2">
           {tabs.map((t) => (
             <Link
               key={t.to}
               to={t.to}
               activeOptions={{ exact: true }}
-              className="flex flex-col items-center gap-1 text-[11px] text-muted-foreground"
-              activeProps={{ className: "text-foreground font-bold" }}
+              className="flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-lg text-[11px] text-muted-foreground transition-colors"
+              activeProps={{ className: "bg-secondary text-foreground font-bold", "aria-current": "page" }}
             >
-              <t.icon className="h-5 w-5" />
-              {t.label}
+              <t.icon className="h-5 w-5 shrink-0" />
+              <span className="whitespace-nowrap">{t.label}</span>
             </Link>
           ))}
+          </div>
         </nav>
       </div>
     </div>

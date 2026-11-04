@@ -109,6 +109,9 @@
   &::-webkit-scrollbar { display: none; }
 }
 
+.mobile-app { padding-top: env(safe-area-inset-top, 0px); }
+.mobile-app-nav { padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)); }
+
 @keyframes notification-slide { from { transform: translateY(-120%); } to { transform: translateY(0); } }
 .notification-slide { animation: notification-slide 250ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .notification-slide { animation: none; } }
