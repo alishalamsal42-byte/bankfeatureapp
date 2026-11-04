@@ -35,7 +35,7 @@ function BankRewards() {
 
   return (
     <AppShell>
-      <ScreenHeader title={BANK.points} subtitle={`${BANK.card} · 1 pt = 1¢`} />
+      <ScreenHeader title={BANK.points} subtitle={BANK.card} />
       <section aria-label="Points balance" className="bg-ink rounded-3xl p-6">
         <div className="flex items-center gap-3"><BrandLogo name={BANK.name} /><p className="text-sm opacity-80">Your {BANK.points}</p></div>
         <p className="mt-3 text-4xl font-extrabold">{bank.points.toLocaleString()} pts</p>
