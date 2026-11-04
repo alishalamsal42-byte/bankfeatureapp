@@ -140,8 +140,6 @@ const baseOffers = [
   { id: "nike", merchant: "Nike", emoji: "👟", category: "Shopping", title: "20% off shoes", points: 2500, value: 18, minSpend: 0, expires: "14 days", reason: "You browsed running shoes last week" },
   { id: "tjx", merchant: "TJ Maxx", emoji: "🛍️", category: "Shopping", title: "$15 voucher", points: 1500, value: 15, minSpend: 0, expires: "10 days", reason: "New store 5 min from campus" },
   { id: "bb", merchant: "Best Buy", emoji: "🎧", category: "Shopping", title: "$20 off $100+", points: 2000, value: 20, minSpend: 100, expires: "6 days", reason: "Requires spending $88 more than you usually do" },
-  { id: "ride", merchant: "Uber", emoji: "🚗", category: "Travel", title: "$3 off a ride", points: 300, value: 3, minSpend: 0, expires: "7 days", reason: "A ride home after class" },
-  { id: "lyft", merchant: "Lyft", emoji: "🚗", category: "Travel", title: "$4 off a ride", points: 400, value: 4, minSpend: 0, expires: "7 days", reason: "A ride near campus" },
   { id: "publix", merchant: "Publix", emoji: "", category: "Grocery", title: "$5 off $40+", points: 0, value: 5, minSpend: 40, expires: "6 days", reason: "Your usual grocery run" },
   { id: "walmart", merchant: "Walmart", emoji: "", category: "Grocery", title: "$3 Walmart Cash", points: 300, value: 3, minSpend: 0, expires: "14 days", reason: "Groceries near Town Center" },
   { id: "netflix", merchant: "Netflix", emoji: "", category: "Online", title: "$7 off your next bill", points: 0, bankFunded: true, value: 7, minSpend: 0, expires: "3 days", renews: true, reason: "Your plan renews soon" },

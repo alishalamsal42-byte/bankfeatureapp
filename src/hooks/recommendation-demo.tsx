@@ -27,7 +27,7 @@ export const presets: Record<string, DemoControls> = {
   'Sunday errands': { dayOfWeek: 0, hour: 15, place: 'Town Center', hoursSinceLast: { ...history, grocery: 150 }, spendPace: 1 },
   'Quiet night': { dayOfWeek: 3, hour: 21, place: 'Residence halls', hoursSinceLast: { ...history, food: 2 }, spendPace: 1 },
   'Late-night food': { dayOfWeek: 3, hour: 22, place: 'Residence halls', hoursSinceLast: { ...history, food: 4 }, spendPace: 1 },
-  'Heading home': { dayOfWeek: 2, hour: 15.5, place: 'Library', hoursSinceLast: { ...history, food: 3 }, spendPace: 1 },
+  'Afternoon coffee': { dayOfWeek: 2, hour: 15.5, place: 'Library', hoursSinceLast: { ...history, food: 3, coffee: 6 }, spendPace: 1 },
 };
 function useStateEngine() {
   const session = useRecommendationSession();

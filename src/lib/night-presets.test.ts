@@ -34,17 +34,13 @@ describe("night demo presets", () => {
     expect(top).toBeUndefined();
     expect(best?.merchant).toBe("Amazon");
   });
-  it("Heading home (Tue 3:30 PM, Library) picks Lyft at about 20% and can notify", () => {
-    const { top } = run("Heading home");
-    expect(top?.merchant).toBe("Lyft");
-    expect(top!.scores.habit).toBeCloseTo(0.2, 2);
-    expect(top!.scores.match).toBeGreaterThanOrEqual(0.115);
+  it("Afternoon coffee (Tue 3:30 PM, Library) has no strong pick but shows coffee as the best option", () => {
+    const { top, best } = run("Afternoon coffee");
+    expect(top).toBeUndefined();
+    expect(best?.merchant).toBe("Starbucks");
   });
-  it("rides cover the afternoon: likely now is at least 8% from 1 PM to 4 PM", () => {
-    for (const hour of [13, 14, 15, 16]) {
-      const ranked = rankRewards(demoOffers, { hour, dayOfWeek: 2, hoursSinceLast: { ...presets["Heading home"]!.hoursSinceLast }, location: mockPlaces.Library });
-      expect(pickTop(ranked, hour, () => true, 2), `hour ${hour}`).toBeDefined();
-    }
+  it("no ride offers are ranked, since Sarah drives", () => {
+    expect(run("Afternoon coffee").ranked.some(r => r.modelCategory === "ride")).toBe(false);
   });
   it("the best option is never a closed or out-of-hours reward", () => {
     for (const name of Object.keys(presets)) {

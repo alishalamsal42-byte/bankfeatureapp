@@ -44,7 +44,7 @@ describe('notification eligibility', () => {
   it('untrained categories never enter scored rankings or notifications', () => {
     const ranked = rankRewards(offers, { hour: 8, dayOfWeek: 2, hoursSinceLast: { coffee: 20 } });
     expect(ranked.some(r => ['movie', 'nike', 'tjx', 'bb'].includes(r.id))).toBe(false);
-    expect(ranked.filter(r => r.modelCategory === 'ride').map(r => r.id).sort()).toEqual(['lyft', 'ride']);
+    expect(ranked.filter(r => r.modelCategory === 'ride').map(r => r.id).sort()).toEqual([]);
     expect(ranked.every(r => r.scores.trained)).toBe(true);
     expect(canNotify({ ...top, modelCategory: undefined, historyCategory: 'travel' }, empty, empty.day)).toBe(false);
   });

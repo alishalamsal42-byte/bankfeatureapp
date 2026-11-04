@@ -2,10 +2,9 @@ import { describe, it, expect } from "vitest";
 import { netSavings, partners, offers, partnerLogo } from "./rewards";
 
 describe("partners", () => {
-  it("travel uses Uber and Lyft with logo assets", () => {
-    expect(offers.filter(o => o.category === "Travel").map(o => o.merchant)).toEqual(["Uber", "Lyft"]);
-    expect(partnerLogo["Uber"]).toBeTruthy();
-    expect(partnerLogo["Lyft"]).toBeTruthy();
+  it("Sarah drives, so there are no ride offers", () => {
+    expect(offers.filter(o => o.category === "Travel").map(o => o.merchant)).toEqual([]);
+    expect(partnerLogo["Starbucks"]).toBeTruthy();
   });
   it("lists merchant programs; Amazon is a bank-funded offer, not a connected app", () => {
     expect([...partners]).toEqual([
