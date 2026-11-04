@@ -47,16 +47,15 @@ function BankRewards() {
         {offers.map(offer => {
           const total = typicalPurchase(offer);
           const split = paymentSplit(total, offerRewardValue(offer), bank.points, true);
-          const charged = split.charged === 0 ? "$0" : `$${split.charged.toFixed(2)}`;
           return (
             <article key={offer.id} aria-label={`${offer.merchant} offer`} className="py-4">
-              {offer.id === bestNow?.id && <p className="mb-2 text-xs font-bold text-success">{topPick ? "AI top pick" : "Good option right now"}</p>}
+              {offer.id === offers[0]?.id && <p className="mb-2 text-xs font-bold text-success">{topPick ? "AI top pick" : "AI pick for right now"}</p>}
               <div className="flex items-center gap-3">
                 <BrandLogo name={offer.merchant} />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold">{offer.merchant}</p>
                   <p className="text-sm text-muted-foreground">{offer.title}</p>
-                  {offer.bankFunded ? <p className="mt-1 text-xs font-semibold text-points">${total.toFixed(2)} bill: {split.bankPts.toLocaleString()} {BANK.points} = {charged} out of pocket</p> : <p className="mt-1 text-xs font-semibold text-points">Typical ${total.toFixed(2)} order: ${split.rewardCovered.toFixed(2)} reward + {split.bankPts.toLocaleString()} {BANK.points} = {charged} out of pocket</p>}
+                  <p className="mt-1 text-xs font-semibold text-points">{split.bankPts.toLocaleString()} pts</p>
                   {offer.bankFunded && <p className="text-xs text-muted-foreground">{expiryLabel(offer)}</p>}
                 </div>
                 <Button asChild size="sm" className="shrink-0"><Link to="/redeem" search={{ id: offer.id, useBank: true }}>Use points</Link></Button>
