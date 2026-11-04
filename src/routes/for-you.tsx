@@ -36,7 +36,7 @@ function ForYou() {
   const list = ranked.filter((o) => cat === "All" || o.category === cat);
   const strongTop = pickTop(list, hour, o => isInterested(o.category, prefs.interests), dayOfWeek);
   // Always show a pick when one is reachable: the strong top pick, or else the best option right now.
-  const top = strongTop ?? pickBestNow(list, hour, o => isInterested(o.category, prefs.interests), dayOfWeek);
+  const top = prefs.history ? strongTop ?? pickBestNow(list, hour, o => isInterested(o.category, prefs.interests), dayOfWeek) ?? list[0] : undefined;
   const noPick = prefs.history && !top && list.length > 0;
   const more = noPick ? byExpiryThenValue([...list, ...unscored.filter(o => cat === "All" || o.category === cat)]).map(o => ({ ...o, scores: undefined })) : [...list.filter(o => o !== top).map(o => ({ ...o, scores: o.scores })), ...unscored.filter(o => cat === "All" || o.category === cat).map(o => ({ ...o, scores: undefined }))];
   const skipped = skippedCategories[skippedCategories.length - 1];

@@ -29,7 +29,7 @@ export function TopRewardPick({ reward, onSkip, hour, showLocation = true, isStr
   ];
   return <section aria-label="Top pick" className="border-t-2 border-primary pt-4 pb-5">
     <div className="mb-4 flex items-center justify-between gap-2">
-      <p className="text-xs font-bold uppercase tracking-widest">{isStrong ? "Your top pick" : "Good option right now"}</p>
+      <p className="text-xs font-bold uppercase tracking-widest">{isStrong ? "AI top pick" : "AI pick for right now"}</p>
       <span className={scores.match >= 0.10 ? "text-xs font-bold text-success" : "text-xs font-bold text-muted-foreground"}>{matchLabel(scores.match)}</span>
     </div>
     <div className="flex items-center gap-4">
