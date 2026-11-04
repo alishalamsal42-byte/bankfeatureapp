@@ -109,8 +109,78 @@
   &::-webkit-scrollbar { display: none; }
 }
 
-.mobile-app { padding-top: env(safe-area-inset-top, 0px); }
-.mobile-app-nav { padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)); }
+/* Phone device shell: a centered device that fills the window height. */
+.phone-stage {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  width: 100%;
+  padding: 8px;
+  background: radial-gradient(120% 100% at 50% 0%, oklch(0.95 0.004 260), var(--stage));
+}
+
+.phone-device {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: min(940px, calc(100dvh - 16px));
+  /* Keep a phone-shaped screen: in a short window the device narrows instead of turning square. */
+  width: min(520px, calc(100vw - 16px), max(340px, calc((100dvh - 16px) * 0.8)));
+  background: var(--background);
+  border: 9px solid oklch(0.17 0.012 260);
+  border-radius: 2.5rem;
+  box-shadow: var(--shadow-phone);
+}
+
+/* Side buttons on the bezel: volume pair left, power right. */
+.phone-device::before,
+.phone-device::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  border-radius: 0 3px 3px 0;
+  background: oklch(0.22 0.012 260);
+  z-index: 60;
+}
+.phone-device::before {
+  left: -8px;
+  top: 19%;
+  height: 7%;
+  box-shadow: 0 46px 0 oklch(0.22 0.012 260), 0 92px 0 oklch(0.22 0.012 260);
+}
+.phone-device::after {
+  right: -8px;
+  top: 25%;
+  height: 13%;
+  border-radius: 3px 0 0 3px;
+}
+
+.phone-home-indicator {
+  display: block;
+  height: 5px;
+  width: 7rem;
+  margin: 0.35rem auto 0;
+  border-radius: 999px;
+  background: oklch(0.55 0.01 260 / 35%);
+}
+
+/* On a real phone (or a very short window) drop the chrome and go edge-to-edge. */
+@media (max-width: 440px), (max-height: 440px) {
+  .phone-stage { padding: 0; }
+  .phone-device {
+    height: 100dvh;
+    width: 100vw;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .phone-device::before,
+  .phone-device::after,
+  .phone-home-indicator { display: none; }
+  .mobile-app-nav { padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)); }
+}
 
 @keyframes notification-slide { from { transform: translateY(-120%); } to { transform: translateY(0); } }
 .notification-slide { animation: notification-slide 250ms ease-out; }

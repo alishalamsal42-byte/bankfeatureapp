@@ -22,4 +22,5 @@
 - [x] Replace Bank cash-out options with AI-picked offer spending, restore Home reward totals, and verify payments and retained history.
 - [x] Remove the Low/Medium match badge from the Accounts AI pick and verify its appearance.
 - [x] Add Publix, Target, Walmart (grocery) and Netflix, Spotify (online) example partners with logos, demo map points, renew labels and history names.
+- [x] Phone screen must read big, not small: device fills the window at every preview size, edge-to-edge on a true phone canvas.
 - [x] Final consistency review: checked all pages and logos, phone and short-screen layouts, lunch AI picks, three points payments and savings, Pay limits, Autosave and chat; corrected unavailable picks, double-counted savings, online funding guards, renewal wording and stale assistant terminology.

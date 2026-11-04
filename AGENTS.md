@@ -24,4 +24,4 @@
 - Bank-funded offers (bankFunded flag, e.g. Amazon, Netflix, Spotify) have no merchant balance and never appear on Connect; their cost is paid fully with Credit points via offerRewardValue = 0, and offerCostLabel is the single source of cost wording so list math, labels and checkout agree.
 - Use the shared pure pickForNow selector on recommendation screens; fallbacks must be trained, open and in offer hours, and never loosen notification eligibility.
 - Guard bank-funded redemptions with canFundOffer and record offerSavings so a card offer cannot be redeemed without its full point cost or counted twice in savings.
-- Keep the mobile application shell viewport-height and unframed, with one independently scrolling main area and safe-area-aware persistent navigation, so screens never shrink into a decorative phone mockup.
+- Present the app as a phone: a device-shaped shell that fills the viewport height and as much width as the window allows, dropping the frame to run edge-to-edge at phone-sized or very short viewports; keep one independently scrolling main area and safe-area-aware persistent navigation.

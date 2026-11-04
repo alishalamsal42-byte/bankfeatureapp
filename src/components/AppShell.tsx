@@ -20,18 +20,18 @@ export function AppShell({ children }: { children: ReactNode }) {
   const hour = controls?.hour;
   const clock = hour === undefined ? now?.toLocaleTimeString([], { hour: "numeric", minute: "2-digit", hour12: false }) ?? "—" : `${String(Math.floor(hour)).padStart(2, "0")}:${String(Math.round((hour % 1) * 60)).padStart(2, "0")}`;
   return (
-    <div className="mobile-app flex h-dvh w-full overflow-hidden bg-background">
-      <div className="relative flex min-h-0 w-full flex-col overflow-hidden">
+    <div className="phone-stage">
+      <div className="phone-device">
         <RewardNotification />
         <RewardDemoPanel />
-        <div className="mx-auto grid w-full max-w-xl shrink-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-5 pt-3 pb-2 text-sm font-semibold">
+        <div className="grid w-full shrink-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-5 pt-3 pb-2 text-sm font-semibold">
           <span>{clock}</span>
           <AskButton />
           <span className="flex shrink-0 items-center justify-end gap-1"><Signal className="h-4 w-4" /><Wifi className="h-4 w-4" /><BatteryFull className="h-5 w-5" /></span>
         </div>
-        <main className="no-scrollbar mx-auto min-h-0 w-full max-w-xl flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain px-5 pb-6">{children}</main>
+        <main className="no-scrollbar min-h-0 w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain px-5 pb-6">{children}</main>
         <nav aria-label="Main navigation" className="mobile-app-nav shrink-0 border-t bg-card">
-          <div className="mx-auto grid w-full max-w-xl grid-cols-5 px-2 pt-2">
+          <div className="grid w-full grid-cols-5 px-2 pt-2">
           {tabs.map((t) => (
             <Link
               key={t.to}
@@ -45,6 +45,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
           </div>
+          <span aria-hidden className="phone-home-indicator" />
         </nav>
       </div>
     </div>
